@@ -3,7 +3,7 @@
 import re
 import pandas as pd
 
-DAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 def time_to_hour(t):
     """Convert time string to decimal hour (e.g. '14:30' -> 14.5)"""
@@ -60,13 +60,13 @@ def parse_availability(raw_string):
             continue
         sh = time_to_hour(start)
         eh = time_to_hour(end)
-        # if end < start assume next-day—keep for availability
-        if eh < sh:
-            eh += 24
+        # if end ≤ start assume next-day (e.g. 00:00 → 24:00)
+        if eh <= sh:
+            eh += 24.0
         availability.setdefault(day, []).append({
-            "start": start,
-            "end": end,
-            "start_hour": sh,
-            "end_hour": eh
+            "start":       start,
+            "end":         end,
+            "start_hour":  sh,
+            "end_hour":    eh
         })
     return availability

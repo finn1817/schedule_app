@@ -141,13 +141,13 @@ def create_shifts_from_availability(hours_of_operation: dict,
             continue
         schedule.setdefault(day, [])
 
-        # carve each operation block into free slots
         for op in ops:
             op_start = time_to_hour(op['start'])
             op_end   = time_to_hour(op['end'])
             if op_end <= op_start:
                 op_end += 24
 
+            # subtract out already-scheduled blocks to get free slots
             free_slots = [(op_start, op_end)]
             for blk in schedule[day]:
                 s1 = time_to_hour(blk['start'])
