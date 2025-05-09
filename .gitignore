@@ -9,6 +9,9 @@
 # Firebase service account key (already in your gitignore)
 workplace-scheduler-ace38-firebase-adminsdk-fbsvc-4d7d358b05.json
 
+workplace-scheduler-ace38-firebase-adminsdk-fbsvc-*.json
+
+
 # Python cache files
 __pycache__/
 *.py[cod]
