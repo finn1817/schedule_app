@@ -44,20 +44,35 @@ class AlternativeSolutionsDialog(QDialog):
         if self.work_study_issues:
             gb_ws = QGroupBox("Work Study Issues")
             gl_ws = QVBoxLayout(gb_ws)
-            gl_ws.addWidget(QLabel("These students don't have exactly 5 hours:"))
+            
+            # Add more detailed heading
+            gl_ws.addWidget(QLabel("Work study students with scheduling issues:"))
             
             # Create a table for work study issues
             ws_table = QTableWidget()
             ws_table.setColumnCount(2)
-            ws_table.setHorizontalHeaderLabels(["Student", "Action Required"])
+            ws_table.setHorizontalHeaderLabels(["Student", "Issue"])
             ws_table.setRowCount(len(self.work_study_issues))
             
-            for i, student in enumerate(self.work_study_issues):
-                ws_table.setItem(i, 0, QTableWidgetItem(student))
-                ws_table.setItem(i, 1, QTableWidgetItem("Adjust shifts to equal 5 hours total"))
+            for i, student_issue in enumerate(self.work_study_issues):
+                # Check if this contains an explicit issue message
+                if ":" in student_issue:
+                    student, issue = student_issue.split(":", 1)
+                    ws_table.setItem(i, 0, QTableWidgetItem(student.strip()))
+                    ws_table.setItem(i, 1, QTableWidgetItem(issue.strip()))
+                else:
+                    # Default case for backward compatibility
+                    ws_table.setItem(i, 0, QTableWidgetItem(student_issue))
+                    ws_table.setItem(i, 1, QTableWidgetItem("Adjust shifts to equal 5 hours total"))
             
             ws_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
             gl_ws.addWidget(ws_table)
+            
+            # Add explanatory text
+            note = QLabel("Work study students must have exactly 5 hours per week. Check their availability or adjust hours of operation.")
+            note.setWordWrap(True)
+            note.setStyleSheet("color: #dc3545; font-style: italic;")
+            gl_ws.addWidget(note)
             
             cl.addWidget(gb_ws)
 
@@ -150,12 +165,21 @@ class AlternativeSolutionsDialog(QDialog):
                 # Work study issues
                 if self.work_study_issues:
                     ws_data = []
-                    for student in self.work_study_issues:
-                        ws_data.append({
-                            'Student': student,
-                            'Issue': 'Does not have exactly 5 hours',
-                            'Recommendation': 'Adjust shifts to equal 5 hours total'
-                        })
+                    for student_issue in self.work_study_issues:
+                        # Parse out the issue if it exists
+                        if ":" in student_issue:
+                            student, issue = student_issue.split(":", 1)
+                            ws_data.append({
+                                'Student': student.strip(),
+                                'Issue': issue.strip(),
+                                'Recommendation': 'Check availability or adjust schedule'
+                            })
+                        else:
+                            ws_data.append({
+                                'Student': student_issue,
+                                'Issue': 'Does not have exactly 5 hours',
+                                'Recommendation': 'Adjust shifts to equal 5 hours total'
+                            })
                     
                     pd.DataFrame(ws_data).to_excel(
                         writer, 

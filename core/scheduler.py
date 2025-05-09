@@ -46,6 +46,129 @@ def find_alternative_workers(workers: list,
     alts.sort(key=lambda w: assigned_hours.get(w['email'], 0))
     return alts
 
+def find_optimal_shift_split(windows, remaining_hours, prefer_split=True):
+    """
+    Find an optimal split of shifts for a work study student
+    
+    Args:
+        windows: List of (day, start, end) availability windows
+        remaining_hours: Target hours to allocate (typically 5.0)
+        prefer_split: Whether to prefer 3+2 or 2+3 splits versus a single 5-hour shift
+        
+    Returns:
+        List of (day, start, end, duration) shift assignments
+    """
+    if not windows or remaining_hours <= 0:
+        return []
+    
+    # If not enough total availability
+    total_available = sum(end - start for _, start, end in windows)
+    if total_available < remaining_hours:
+        # Just return all available windows
+        return [(day, start, end, end - start) for day, start, end in windows]
+    
+    # Check for perfect 3+2 or 2+3 splits
+    if prefer_split and remaining_hours == 5.0:
+        # Look for ~3 hour windows
+        for i, (day1, s1, e1) in enumerate(windows):
+            if 2.8 <= (e1 - s1) <= 3.2:  # ~3 hours
+                # Look for complementary ~2 hour windows
+                for j, (day2, s2, e2) in enumerate(windows):
+                    if i != j and 1.8 <= (e2 - s2) <= 2.2:  # ~2 hours
+                        return [
+                            (day1, s1, s1 + 3.0, 3.0),
+                            (day2, s2, s2 + 2.0, 2.0)
+                        ]
+    
+    # No perfect split found, try to maximize shift distribution
+    # Sort by duration (prefer shorter shifts for more flexibility)
+    sorted_windows = sorted(windows, key=lambda w: w[2] - w[1])
+    
+    result = []
+    remaining = remaining_hours
+    
+    # Try to make shifts not too long (split if a window is too long)
+    for day, start, end in sorted_windows:
+        if remaining <= 0:
+            break
+        
+        window_duration = end - start
+        
+        # If window is long enough, try to break it up
+        if prefer_split and window_duration >= 4.5 and remaining == 5.0:
+            # Create 3+2 split in the same day
+            result.append((day, start, start + 3.0, 3.0))
+            result.append((day, start + 3.0, start + 5.0, 2.0))
+            remaining = 0
+            break
+        
+        # Otherwise just take what we need from this window
+        take = min(window_duration, remaining)
+        result.append((day, start, start + take, take))
+        remaining -= take
+    
+    return result
+
+def calculate_availability_hours(worker):
+    """Calculate total hours a worker is available per week"""
+    total_hours = 0
+    for day_slots in worker.get('availability', {}).values():
+        for slot in day_slots:
+            total_hours += slot['end_hour'] - slot['start_hour']
+    return total_hours
+
+def check_work_study_availability(ws_workers, hours_of_operation):
+    """
+    Check if work study students have sufficient availability
+    matching hours of operation
+    
+    Returns:
+        List of (worker, issue) tuples for workers with insufficient availability
+    """
+    issues = []
+    
+    for worker in ws_workers:
+        # Calculate total available hours that match hours of operation
+        matching_hours = 0
+        for day, ops in hours_of_operation.items():
+            for op in ops:
+                op_start = time_to_hour(op['start'])
+                op_end = time_to_hour(op['end'])
+                if op_end <= op_start:
+                    op_end += 24
+                    
+                # Check worker's availability against this hours of operation
+                for a in worker.get('availability', {}).get(day, []):
+                    av_start = a['start_hour']
+                    av_end = a['end_hour']
+                    # Calculate overlap
+                    overlap_start = max(op_start, av_start)
+                    overlap_end = min(op_end, av_end)
+                    if overlap_end > overlap_start:
+                        matching_hours += (overlap_end - overlap_start)
+        
+        # If less than 5 hours available, report an issue
+        if matching_hours < 5:
+            issues.append((
+                worker,
+                f"Only {matching_hours:.1f} hours available during operating hours (needs 5)"
+            ))
+    
+    return issues
+
+def recently_scheduled(worker_email, day, shift_start, schedule, buffer_hours=0.5):
+    """Check if a worker has been scheduled just before this shift"""
+    if day not in schedule:
+        return False
+        
+    for shift in schedule.get(day, []):
+        if worker_email in shift.get('raw_assigned', []):
+            shift_end = time_to_hour(shift['end'])
+            # If this worker's last shift ended within buffer_hours of this one
+            if abs(shift_end - shift_start) < buffer_hours:
+                return True
+    return False
+
 def create_shifts_from_availability(hours_of_operation=None, workers=None, workplace_id=None, 
                                     max_hours_per_worker=20.0, max_workers_per_shift=2):
     """
@@ -95,12 +218,29 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
 
     # track how many hours each email has
     assigned_hours = {w['email']: 0 for w in workers}
-    ws_status      = {w['email']: w.get('work_study', False) for w in workers}
-    ws_workers     = [w for w in workers if ws_status[w['email']]]
-    random.shuffle(ws_workers)
+    ws_status = {w['email']: w.get('work_study', False) for w in workers}
+    
+    # Calculate availability ratio for each worker for fair distribution
+    availability_hours = {w['email']: calculate_availability_hours(w) for w in workers}
+    
+    # Sort work study workers by availability (least available first to prioritize them)
+    ws_workers = [w for w in workers if ws_status[w['email']]]
+    ws_workers.sort(key=lambda w: availability_hours[w['email']])
+    
+    # Check for work study availability issues
+    ws_availability_issues = check_work_study_availability(ws_workers, hours_of_operation)
+    if ws_availability_issues:
+        for worker, issue in ws_availability_issues:
+            logger.warning(f"Work study {worker['first_name']} {worker['last_name']}: {issue}")
+    
+    # Initial work study issues
+    initial_ws_issues = [
+        f"{w['first_name']} {w['last_name']}: {issue}"
+        for w, issue in ws_availability_issues
+    ]
 
     #
-    # 1) Allocate exactly 5 hours to each work-study, possibly split across multiple sub-shifts
+    # 1) Allocate exactly 5 hours to each work-study, preferring 3+2 or 2+3 hour splits
     #
     for w in ws_workers:
         em = w['email']
@@ -111,46 +251,35 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         for day, ops in hours_of_operation.items():
             for op in ops:
                 op_start = time_to_hour(op['start'])
-                op_end   = time_to_hour(op['end'])
+                op_end = time_to_hour(op['end'])
                 if op_end <= op_start:
                     op_end += 24
 
                 for a in w.get('availability', {}).get(day, []):
                     av_start = a['start_hour']
-                    av_end   = a['end_hour']
+                    av_end = a['end_hour']
                     s = max(op_start, av_start)
                     e = min(op_end, av_end)
                     if e > s:
                         windows.append((day, s, e))
 
-        # sort by day order and start time
-        windows.sort(key=lambda x: (DAYS.index(x[0]), x[1]))
-
-        # carve off exactly `remaining` hours from those windows
-        for day, s, e in windows:
-            if remaining <= 0:
-                break
-            window_len = e - s
-            if window_len <= 0:
-                continue
-
-            take = min(window_len, remaining)
-            seg_start = s
-            seg_end   = s + take
-
-            # record a work-study shift
+        # Find optimal shift splits (prefer 3+2 split for work-study)
+        optimal_shifts = find_optimal_shift_split(windows, remaining, prefer_split=True)
+        
+        # Apply the optimal shifts
+        for day, start, end, duration in optimal_shifts:
             schedule.setdefault(day, []).append({
-                "start":        hour_to_time_str(seg_start),
-                "end":          hour_to_time_str(seg_end),
-                "assigned":     [f"{w['first_name']} {w['last_name']}"],
-                "available":    [f"{w['first_name']} {w['last_name']}"],
+                "start": hour_to_time_str(start),
+                "end": hour_to_time_str(end),
+                "assigned": [f"{w['first_name']} {w['last_name']}"],
+                "available": [f"{w['first_name']} {w['last_name']}"],
                 "raw_assigned": [em],
                 "all_available": [w],
                 "is_work_study": True
             })
-
-            assigned_hours[em] += take
-            remaining       -= take
+            
+            assigned_hours[em] += duration
+            remaining -= duration
 
         if remaining > 0:
             # mark issue--will show up in your ws_issues list
@@ -160,10 +289,16 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
             )
 
     #
-    # 2) Fill remaining hours-of-operation windows as before
+    # 2) Fill remaining hours-of-operation windows with regular workers
+    #    Sort workers by ratio of (assigned_hours / availability_hours)
+    #    to ensure even distribution relative to availability
     #
     days = list(hours_of_operation.keys())
-    random.shuffle(days)
+    
+    # Keep days in order to make schedule more predictable
+    # This helps with consistency across schedule generations
+    days.sort(key=DAYS.index)
+    
     for day in days:
         ops = hours_of_operation.get(day, [])
         if not ops:
@@ -172,13 +307,13 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
 
         for op in ops:
             op_start = time_to_hour(op['start'])
-            op_end   = time_to_hour(op['end'])
+            op_end = time_to_hour(op['end'])
             if op_end <= op_start:
                 op_end += 24
 
             # subtract out already-scheduled blocks to get free slots
             free_slots = [(op_start, op_end)]
-            for blk in schedule[day]:
+            for blk in schedule.get(day, []):
                 s1 = time_to_hour(blk['start'])
                 e1 = time_to_hour(blk['end'])
                 new_free = []
@@ -192,45 +327,72 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
                             new_free.append((e1, e0))
                 free_slots = new_free
 
-            # within each free slot, carve shifts of random length
+            # Sort free slots by duration (shortest first)
+            # This helps create more balanced shift lengths
+            free_slots.sort(key=lambda slot: slot[1] - slot[0])
+
+            # within each free slot, carve shifts of appropriate length
             for (s0, e0) in free_slots:
                 if (e0 - s0) < 2:
                     continue
+                
+                # Prefer common shift lengths but have some variety
                 lengths = [l for l in shift_lengths if l <= (e0 - s0)] or [2]
+                
                 cur = s0
                 while cur < e0:
                     random.shuffle(lengths)
-                    length    = next((l for l in lengths if cur + l <= e0), lengths[0])
+                    length = next((l for l in lengths if cur + l <= e0), lengths[0])
                     end_shift = min(cur + length, e0)
+                    shift_duration = end_shift - cur
 
                     # pick available workers
                     avail = []
                     for x in workers:
                         x_em = x['email']
-                        if ws_status.get(x_em, False) and assigned_hours[x_em] >= 5:
+                        
+                        # Skip work study students who have their hours or haven't been scheduled yet
+                        if ws_status.get(x_em, False):
+                            if assigned_hours[x_em] >= 5:
+                                continue
+                            # ensure WS only gets their 5h in phase 1
+                            if assigned_hours[x_em] == 0:
+                                continue
+                            
+                        # Skip workers who just had a shift (avoid back-to-back shifts)
+                        if recently_scheduled(x_em, day, cur, schedule):
                             continue
-                        # ensure WS only gets their 5h in phase 1
-                        if ws_status.get(x_em, False) and assigned_hours[x_em] == 0 \
-                           and (end_shift - cur) != 5:
-                            continue
+                            
+                        # Regular worker availability check
                         if is_worker_available(x, day, cur, end_shift) and \
-                           assigned_hours[x_em] + (end_shift - cur) <= max_hours_per_worker:
+                           assigned_hours[x_em] + shift_duration <= max_hours_per_worker:
                             avail.append(x)
 
-                    avail.sort(key=lambda x: (assigned_hours[x['email']], random.random()))
+                    # Calculate fairness ratio: assigned_hours / availability_hours
+                    # This ensures workers with less availability get fair consideration
+                    def fairness_score(worker):
+                        w_email = worker['email']
+                        avail_hours = max(availability_hours.get(w_email, 1), 1)  # Avoid div by zero
+                        assigned = assigned_hours.get(w_email, 0)
+                        ratio = assigned / avail_hours
+                        # Add small random factor to break ties
+                        return (ratio, random.random())
+                    
+                    # Sort by fairness ratio (lowest first)
+                    avail.sort(key=fairness_score)
                     chosen = avail[:max_workers_per_shift]
 
                     # assign those chosen
                     for x in chosen:
-                        assigned_hours[x['email']] += (end_shift - cur)
+                        assigned_hours[x['email']] += shift_duration
 
                     # record individual shifts--one entry per worker
                     for x in chosen:
-                        schedule[day].append({
-                            "start":        hour_to_time_str(cur),
-                            "end":          hour_to_time_str(end_shift),
-                            "assigned":     [f"{x['first_name']} {x['last_name']}"],
-                            "available":    [f"{y['first_name']} {y['last_name']}" for y in avail],
+                        schedule.setdefault(day, []).append({
+                            "start": hour_to_time_str(cur),
+                            "end": hour_to_time_str(end_shift),
+                            "assigned": [f"{x['first_name']} {x['last_name']}"],
+                            "available": [f"{y['first_name']} {y['last_name']}" for y in avail],
                             "raw_assigned": [x['email']],
                             "all_available": avail
                         })
@@ -238,17 +400,17 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
                     # if we didn't fill up to max_workers, mark unfilled slots
                     for _ in range(max_workers_per_shift - len(chosen)):
                         unfilled_shifts.append({
-                            "day":        day,
-                            "start":      hour_to_time_str(cur),
-                            "end":        hour_to_time_str(end_shift),
+                            "day": day,
+                            "start": hour_to_time_str(cur),
+                            "end": hour_to_time_str(end_shift),
                             "start_hour": cur,
-                            "end_hour":   end_shift
+                            "end_hour": end_shift
                         })
-                        schedule[day].append({
-                            "start":        hour_to_time_str(cur),
-                            "end":          hour_to_time_str(end_shift),
-                            "assigned":     ["Unfilled"],
-                            "available":    [f"{y['first_name']} {y['last_name']}" for y in avail],
+                        schedule.setdefault(day, []).append({
+                            "start": hour_to_time_str(cur),
+                            "end": hour_to_time_str(end_shift),
+                            "assigned": ["Unfilled"],
+                            "available": [f"{y['first_name']} {y['last_name']}" for y in avail],
                             "raw_assigned": [],
                             "all_available": avail
                         })
@@ -268,10 +430,13 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         for w in workers
         if assigned_hours[w['email']] == 0
     ]
-    ws_issues = [
+    
+    # Include both initial issues and final check
+    ws_issues = initial_ws_issues + [
         f"{w['first_name']} {w['last_name']} ({assigned_hours[w['email']]}h)"
         for w in workers
-        if ws_status[w['email']] and assigned_hours[w['email']] != 5
+        if ws_status[w['email']] and assigned_hours[w['email']] != 5 
+        and f"{w['first_name']} {w['last_name']}" not in [issue.split(':')[0] for issue in initial_ws_issues]
     ]
 
     # alternative solutions for any unfilled

@@ -5,18 +5,20 @@ import logging
 import shutil
 import json
 import pandas as pd
+from PyQt5.QtGui import QIcon  # Add this import
 from datetime import datetime
 from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QTableWidget, QTableWidgetItem, QFileDialog, QMessageBox,
     QTabWidget, QDialog, QFormLayout, QSpinBox, QComboBox,
     QLineEdit, QTextEdit, QHeaderView, QListWidget, QListWidgetItem,
-    QProgressDialog, QCheckBox
+    QProgressDialog, QCheckBox, QFrame
 )
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QFont
 from PyQt5.QtPrintSupport import QPrinter, QPrintDialog
 from PyQt5.QtGui import QTextDocument
+from PyQt5.QtWidgets import QApplication
 
 from core.config import DIRS, DAYS, db, firebase_available
 from core.data import (
@@ -28,7 +30,7 @@ from core.parser import parse_availability, format_time_ampm, time_to_hour
 from core.scheduler import create_shifts_from_availability
 from core.exporter import send_schedule_email
 from core.firebase_manager import FirebaseManager
-from .style_helper import StyleHelper
+from .style_helper import StyleHelper, ModernTableWidget
 from .hours_of_operation_dialog import HoursOfOperationDialog
 from .alternative_solutions_dialog import AlternativeSolutionsDialog
 from .last_minute_availability_dialog import LastMinuteAvailabilityDialog
@@ -44,89 +46,254 @@ class WorkplaceTab(QWidget):
         self.data_manager = get_data_manager()
         self.firebase_enabled = firebase_available()
         self.firebase_manager = FirebaseManager.get_instance() if self.firebase_enabled else None
+        self.last_updated = None
         self.initUI()
         
         # Try to load workplace data from Firebase if available
         if self.firebase_enabled:
             self.data_manager.load_workplace(workplace)
+            self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     def initUI(self):
         layout = QVBoxLayout(self)
+        layout.setSpacing(15)
+        layout.setContentsMargins(15, 15, 15, 15)
 
-        # Title
-        title = StyleHelper.create_section_title(
-            self.workplace.replace('_',' ').title()
-        )
-        layout.addWidget(title)
-
-        # Firebase status indicator
+        # Title section with modern design
+        title_section = QFrame()
+        title_section.setStyleSheet("background-color: #f8f9fa; border-radius: 8px;")
+        title_section.setFrameShape(QFrame.StyledPanel)
+        title_section.setFrameShadow(QFrame.Raised)
+        title_layout = QVBoxLayout(title_section)
+        title_layout.setContentsMargins(15, 15, 15, 15)
+        
+        # Workplace title
+        title = QLabel(self.workplace.replace('_',' ').title())
+        title.setStyleSheet("font-size: 24px; font-weight: bold; color: #343a40;")
+        title_layout.addWidget(title)
+        
+        # Status and info line
+        info_layout = QHBoxLayout()
         if self.firebase_enabled:
             status = QLabel("✅ Firebase Connected")
             status.setStyleSheet("color: #28a745; font-weight: bold;")
         else:
             status = QLabel("❌ Firebase Not Connected")
             status.setStyleSheet("color: #dc3545; font-weight: bold;")
-        layout.addWidget(status)
+        
+        info_layout.addWidget(status)
+        info_layout.addStretch()
+        
+        # Add last updated timestamp if available
+        if self.last_updated:
+            updated_label = QLabel(f"Last updated: {self.last_updated}")
+            updated_label.setStyleSheet("color: #6c757d; font-style: italic;")
+            info_layout.addWidget(updated_label)
+        
+        title_layout.addLayout(info_layout)
+        layout.addWidget(title_section)
 
-        # Quick action buttons
+        # Quick action buttons in a card
+        action_card = QFrame()
+        action_card.setStyleSheet("background-color: white; border-radius: 10px; border: 1px solid #dee2e6;")
+        action_card.setFrameShape(QFrame.StyledPanel)
+        action_card.setFrameShadow(QFrame.Raised)
+        action_layout = QVBoxLayout(action_card)
+        action_layout.setContentsMargins(15, 15, 15, 15)
+        
+        # Action buttons label
+        action_label = QLabel("Quick Actions")
+        action_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #495057; margin-bottom: 10px;")
+        action_layout.addWidget(action_label)
+        
+        # Button layout with nice spacing and equal size buttons
         btn_layout = QHBoxLayout()
-        upload_btn   = StyleHelper.create_button("Upload Excel File")
+        btn_layout.setSpacing(10)
+        
+        upload_btn = StyleHelper.create_button("Upload Excel File", icon="icons/upload.png")
         upload_btn.clicked.connect(self.upload_excel)
-        hours_btn    = StyleHelper.create_button("Hours of Operation")
+        
+        hours_btn = StyleHelper.create_button("Hours of Operation", icon="icons/clock.png")
         hours_btn.clicked.connect(self.manage_hours)
-        generate_btn = StyleHelper.create_action_button("Generate Schedule")
+        
+        generate_btn = StyleHelper.create_action_button("Generate Schedule", icon="icons/calendar.png")
         generate_btn.clicked.connect(self.generate_schedule)
-        view_btn     = StyleHelper.create_button("View Current Schedule", primary=False)
+        
+        view_btn = StyleHelper.create_button("View Current Schedule", primary=False, icon="icons/view.png")
         view_btn.clicked.connect(self.view_current_schedule)
-        last_btn     = StyleHelper.create_button("Last Minute", primary=False)
-        last_btn.setStyleSheet("background-color: #fd7e14; color: white;")
+        
+        last_btn = StyleHelper.create_button("Last Minute", primary=False)
+        last_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #fd7e14; 
+                color: white;
+                border: none;
+                padding: 10px 18px;
+                border-radius: 4px;
+                font-weight: bold;
+                min-height: 36px;
+            }
+            QPushButton:hover {
+                background-color: #e76b00;
+            }
+            QPushButton:pressed {
+                background-color: #d26200;
+            }
+        """)
         last_btn.clicked.connect(self.show_last_minute_dialog)
 
         # Add Firebase sync button if Firebase is enabled
         if self.firebase_enabled:
             sync_btn = StyleHelper.create_button("Sync with Firebase", primary=False)
-            sync_btn.setStyleSheet("background-color: #17a2b8; color: white;")
+            sync_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #17a2b8; 
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    min-height: 36px;
+                }
+                QPushButton:hover {
+                    background-color: #138496;
+                }
+                QPushButton:pressed {
+                    background-color: #117a8b;
+                }
+            """)
             sync_btn.clicked.connect(self.sync_with_firebase)
             btn_layout.addWidget(sync_btn)
 
         for b in (upload_btn, hours_btn, generate_btn, view_btn, last_btn):
             btn_layout.addWidget(b)
-        layout.addLayout(btn_layout)
+            
+        action_layout.addLayout(btn_layout)
+        layout.addWidget(action_card)
 
-        # Tabs: Workers + Hours only
+        # Tabs in a card
         self.tabs = QTabWidget()
+        self.tabs.setDocumentMode(True)
+        self.tabs.setStyleSheet("""
+            QTabWidget::pane {
+                border-top: 2px solid #dee2e6;
+                background-color: white;
+                border-radius: 0px 10px 10px 10px;
+            }
+            QTabBar::tab {
+                background-color: #e9ecef;
+                color: #495057;
+                padding: 10px 20px;
+                border: 1px solid #dee2e6;
+                border-bottom: none;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                min-width: 120px;
+                font-weight: 500;
+            }
+            QTabBar::tab:selected {
+                background-color: white;
+                border-bottom: 3px solid #007bff;
+                color: #007bff;
+                font-weight: bold;
+            }
+            QTabBar::tab:hover:!selected {
+                background-color: #f8f9fa;
+            }
+        """)
         self._make_workers_tab()
         self._make_hours_tab()
         layout.addWidget(self.tabs)
 
     def _make_workers_tab(self):
         tab = QWidget()
+        tab.setStyleSheet("background-color: white; border-radius: 8px;")
         L = QVBoxLayout(tab)
+        L.setContentsMargins(15, 15, 15, 15)
+        L.setSpacing(15)
+        
+        # Table header
+        header_label = QLabel("Worker Management")
+        header_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #495057;")
+        L.addWidget(header_label)
 
-        self.workers_table = QTableWidget()
+        # Use ModernTableWidget for better styling
+        self.workers_table = ModernTableWidget()
         self.workers_table.setColumnCount(6)
         self.workers_table.setHorizontalHeaderLabels([
-            "First Name","Last Name","Email","Work Study","Availability","Actions"
+            "First Name", "Last Name", "Email", "Work Study", "Availability", "Actions"
         ])
         self.load_workers_table()
         L.addWidget(self.workers_table)
 
+        # Action buttons for worker management
         btn_layout = QHBoxLayout()
-        add_btn    = StyleHelper.create_button("Add Worker")
+        btn_layout.setSpacing(10)
+        
+        add_btn = StyleHelper.create_button("Add Worker", icon="icons/add-user.png")
         add_btn.clicked.connect(self.add_worker_dialog)
+        
         remove_btn = StyleHelper.create_button("Remove All Workers", primary=False)
-        remove_btn.setStyleSheet("background-color: #dc3545; color: white;")
+        remove_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545; 
+                color: white;
+                border: none;
+                padding: 8px 16px;
+                border-radius: 4px;
+                font-weight: bold;
+                min-height: 36px;
+            }
+            QPushButton:hover {
+                background-color: #c82333;
+            }
+            QPushButton:pressed {
+                background-color: #bd2130;
+            }
+        """)
         remove_btn.clicked.connect(self.remove_all_workers)
         
         # If Firebase enabled, add Export to Firebase button
         if self.firebase_enabled:
             export_btn = StyleHelper.create_button("Export to Firebase", primary=False)
-            export_btn.setStyleSheet("background-color: #28a745; color: white;")
+            export_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #28a745; 
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    min-height: 36px;
+                }
+                QPushButton:hover {
+                    background-color: #218838;
+                }
+                QPushButton:pressed {
+                    background-color: #1e7e34;
+                }
+            """)
             export_btn.clicked.connect(self.export_workers_to_firebase)
             btn_layout.addWidget(export_btn)
             
             import_btn = StyleHelper.create_button("Import from Firebase", primary=False)
-            import_btn.setStyleSheet("background-color: #17a2b8; color: white;")
+            import_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #17a2b8; 
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    min-height: 36px;
+                }
+                QPushButton:hover {
+                    background-color: #138496;
+                }
+                QPushButton:pressed {
+                    background-color: #117a8b;
+                }
+            """)
             import_btn.clicked.connect(self.import_workers_from_firebase)
             btn_layout.addWidget(import_btn)
         
@@ -138,23 +305,51 @@ class WorkplaceTab(QWidget):
 
     def _make_hours_tab(self):
         tab = QWidget()
+        tab.setStyleSheet("background-color: white; border-radius: 8px;")
         L = QVBoxLayout(tab)
+        L.setContentsMargins(15, 15, 15, 15)
+        L.setSpacing(15)
+        
+        # Table header
+        header_label = QLabel("Hours of Operation")
+        header_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #495057;")
+        L.addWidget(header_label)
 
-        self.hours_table = QTableWidget()
+        # Use ModernTableWidget for better styling
+        self.hours_table = ModernTableWidget()
         self.hours_table.setColumnCount(3)
-        self.hours_table.setHorizontalHeaderLabels(["Day","Start","End"])
+        self.hours_table.setHorizontalHeaderLabels(["Day", "Start", "End"])
         self.load_hours_table()
         L.addWidget(self.hours_table)
 
+        # Action buttons
         btn_layout = QHBoxLayout()
-        btn = StyleHelper.create_button("Edit Hours of Operation")
+        btn_layout.setSpacing(10)
+        
+        btn = StyleHelper.create_button("Edit Hours of Operation", icon="icons/edit.png")
         btn.clicked.connect(self.manage_hours)
         btn_layout.addWidget(btn)
         
         # If Firebase enabled, add sync hours button
         if self.firebase_enabled:
             sync_hours_btn = StyleHelper.create_button("Sync Hours with Firebase", primary=False)
-            sync_hours_btn.setStyleSheet("background-color: #17a2b8; color: white;")
+            sync_hours_btn.setStyleSheet("""
+                QPushButton {
+                    background-color: #17a2b8; 
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    min-height: 36px;
+                }
+                QPushButton:hover {
+                    background-color: #138496;
+                }
+                QPushButton:pressed {
+                    background-color: #117a8b;
+                }
+            """)
             sync_hours_btn.clicked.connect(self.sync_hours_with_firebase)
             btn_layout.addWidget(sync_hours_btn)
         
@@ -207,13 +402,44 @@ class WorkplaceTab(QWidget):
 
                 actions = QWidget()
                 hl = QHBoxLayout(actions)
-                hl.setContentsMargins(0,0,0,0)
+                hl.setContentsMargins(5, 2, 5, 2)
+                hl.setSpacing(5)
+                hl.setAlignment(Qt.AlignCenter)  # Center the buttons
+                
                 e = QPushButton("Edit")
-                e.setStyleSheet("background:#ffc107;")
+                e.setFixedWidth(100)  # Make buttons a fixed width
+                e.setStyleSheet("""
+                    QPushButton {
+                        background-color: #ffc107;
+                        color: #212529;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #e0a800;
+                    }
+                """)
                 e.clicked.connect(lambda _,r=i,em=em: self.edit_worker_dialog(r,em))
+                
                 d = QPushButton("Delete")
-                d.setStyleSheet("background:#dc3545;")
+                d.setFixedWidth(100)  # Make buttons a fixed width
+                d.setStyleSheet("""
+                    QPushButton {
+                        background-color: #dc3545;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #c82333;
+                    }
+                """)
                 d.clicked.connect(lambda _,em=em: self.delete_worker(em))
+                
                 hl.addWidget(e)
                 hl.addWidget(d)
                 self.workers_table.setCellWidget(i,5,actions)
@@ -256,15 +482,46 @@ class WorkplaceTab(QWidget):
 
                 actions = QWidget()
                 hl = QHBoxLayout(actions)
-                hl.setContentsMargins(0,0,0,0)
+                hl.setContentsMargins(5, 2, 5, 2)
+                hl.setSpacing(5)
+                hl.setAlignment(Qt.AlignCenter)  # Center the buttons
+                
                 e = QPushButton("Edit")
-                e.setStyleSheet("background:#ffc107;")
+                e.setFixedWidth(90)  # Make buttons a fixed width
+                e.setStyleSheet("""
+                    QPushButton {
+                        background-color: #ffc107;
+                        color: #212529;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #e0a800;
+                    }
+                """)
                 e.clicked.connect(lambda _,r=i,em=em,wid=worker.get('id',''): 
                                  self.edit_worker_dialog(r, em, worker_id=wid))
+                
                 d = QPushButton("Delete")
-                d.setStyleSheet("background:#dc3545;")
+                d.setFixedWidth(90)  # Make buttons a fixed width
+                d.setStyleSheet("""
+                    QPushButton {
+                        background-color: #dc3545;
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #c82333;
+                    }
+                """)
                 d.clicked.connect(lambda _,em=em,wid=worker.get('id',''): 
                                  self.delete_worker(em, worker_id=wid))
+                
                 hl.addWidget(e)
                 hl.addWidget(d)
                 self.workers_table.setCellWidget(i,5,actions)
@@ -372,32 +629,149 @@ class WorkplaceTab(QWidget):
         dialog = QDialog(self)
         dialog.setWindowTitle("Add Worker")
         dialog.setMinimumWidth(500)
+        dialog.setStyleSheet("background-color: #f8f9fa;")
         layout = QVBoxLayout(dialog)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(15)
+        
+        # Dialog title
+        title = QLabel("Add New Worker")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        layout.addWidget(title)
+        
+        # Content card
+        content_card = QFrame()
+        content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        content_card.setFrameShape(QFrame.StyledPanel)
+        content_card.setFrameShadow(QFrame.Raised)
+        card_layout = QVBoxLayout(content_card)
+        card_layout.setContentsMargins(20, 20, 20, 20)
+        card_layout.setSpacing(15)
 
         form = QFormLayout()
-        fn = QLineEdit(); form.addRow("First Name:", fn)
-        ln = QLineEdit(); form.addRow("Last Name:", ln)
-        em = QLineEdit(); form.addRow("Email:", em)
-        ws = QComboBox(); ws.addItems(["No","Yes"]); form.addRow("Work Study:", ws)
+        form.setVerticalSpacing(10)
+        form.setHorizontalSpacing(15)
+        
+        fn = QLineEdit()
+        fn.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QLineEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("First Name:", fn)
+        
+        ln = QLineEdit()
+        ln.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QLineEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Last Name:", ln)
+        
+        em = QLineEdit()
+        em.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QLineEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Email:", em)
+        
+        ws = QComboBox()
+        ws.addItems(["No","Yes"])
+        ws.setStyleSheet("""
+            QComboBox {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QComboBox:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Work Study:", ws)
+        
         avail = QTextEdit()
         avail.setPlaceholderText("Day HH:MM-HH:MM, ...")
         avail.setMinimumHeight(100)
+        avail.setStyleSheet("""
+            QTextEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QTextEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
         form.addRow("Availability:", avail)
+        
+        # Provide format hint
+        hint = QLabel("Format: Monday 09:00-17:00, Tuesday 10:00-15:00")
+        hint.setStyleSheet("color: #6c757d; font-style: italic;")
+        form.addRow("", hint)
         
         # Add Firebase option if enabled
         if self.firebase_enabled:
             use_firebase = QCheckBox("Save to Firebase")
             use_firebase.setChecked(True)
+            use_firebase.setStyleSheet("""
+                QCheckBox {
+                    color: #495057;
+                }
+                QCheckBox::indicator {
+                    width: 18px;
+                    height: 18px;
+                }
+                QCheckBox::indicator:checked {
+                    background-color: #007bff;
+                    border: 2px solid #007bff;
+                    border-radius: 3px;
+                }
+            """)
             form.addRow("", use_firebase)
         else:
             use_firebase = None
             
-        layout.addLayout(form)
+        card_layout.addLayout(form)
+        layout.addWidget(content_card)
 
         btns = QHBoxLayout()
-        save = StyleHelper.create_button("Save")
+        btns.setSpacing(10)
+        
+        save = StyleHelper.create_button("Save Worker")
         cancel = StyleHelper.create_button("Cancel", primary=False)
-        btns.addWidget(save); btns.addWidget(cancel)
+        btns.addWidget(save)
+        btns.addWidget(cancel)
         layout.addLayout(btns)
 
         save.clicked.connect(lambda: self.save_worker(
@@ -515,14 +889,105 @@ class WorkplaceTab(QWidget):
                     dialog = QDialog(self)
                     dialog.setWindowTitle("Edit Worker")
                     dialog.setMinimumWidth(500)
+                    dialog.setStyleSheet("background-color: #f8f9fa;")
                     layout = QVBoxLayout(dialog)
+                    layout.setContentsMargins(20, 20, 20, 20)
+                    layout.setSpacing(15)
+                    
+                    # Dialog title
+                    title = QLabel(f"Edit {worker_data.get('first_name', '')} {worker_data.get('last_name', '')}")
+                    title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+                    layout.addWidget(title)
+                    
+                    # Content card
+                    content_card = QFrame()
+                    content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+                    content_card.setFrameShape(QFrame.StyledPanel)
+                    content_card.setFrameShadow(QFrame.Raised)
+                    card_layout = QVBoxLayout(content_card)
+                    card_layout.setContentsMargins(20, 20, 20, 20)
+                    card_layout.setSpacing(15)
                     
                     form = QFormLayout()
-                    fn = QLineEdit(worker_data.get("first_name", "")); form.addRow("First Name:", fn)
-                    ln = QLineEdit(worker_data.get("last_name", "")); form.addRow("Last Name:", ln)
-                    em = QLineEdit(worker_data.get("email", "")); em.setReadOnly(True); form.addRow("Email:", em)
-                    ws = QComboBox(); ws.addItems(["No", "Yes"])
+                    form.setVerticalSpacing(10)
+                    form.setHorizontalSpacing(15)
+                    
+                    fn = QLineEdit(worker_data.get("first_name", ""))
+                    fn.setStyleSheet("""
+                        QLineEdit {
+                            border: 1px solid #ced4da;
+                            border-radius: 4px;
+                            padding: 8px;
+                            background-color: white;
+                        }
+                        QLineEdit:focus {
+                            border-color: #80bdff;
+                            outline: 0;
+                            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        }
+                    """)
+                    form.addRow("First Name:", fn)
+                    
+                    ln = QLineEdit(worker_data.get("last_name", ""))
+                    ln.setStyleSheet("""
+                        QLineEdit {
+                            border: 1px solid #ced4da;
+                            border-radius: 4px;
+                            padding: 8px;
+                            background-color: white;
+                        }
+                        QLineEdit:focus {
+                            border-color: #80bdff;
+                            outline: 0;
+                            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        }
+                    """)
+                    form.addRow("Last Name:", ln)
+                    
+                    em = QLineEdit(worker_data.get("email", ""))
+                    if worker_data.get("email", ""):  # Only make read-only if email exists
+                        em.setReadOnly(True)
+                        em.setStyleSheet("""
+                            QLineEdit {
+                                border: 1px solid #ced4da;
+                                border-radius: 4px;
+                                padding: 8px;
+                                background-color: #e9ecef;
+                                color: #495057;
+                            }
+                        """)
+                    else:
+                        em.setStyleSheet("""
+                            QLineEdit {
+                                border: 1px solid #ced4da;
+                                border-radius: 4px;
+                                padding: 8px;
+                                background-color: white;
+                            }
+                            QLineEdit:focus {
+                                border-color: #80bdff;
+                                outline: 0;
+                                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                            }
+                        """)
+                    form.addRow("Email:", em)
+                    
+                    ws = QComboBox()
+                    ws.addItems(["No", "Yes"])
                     ws.setCurrentText("Yes" if worker_data.get("work_study", False) else "No")
+                    ws.setStyleSheet("""
+                        QComboBox {
+                            border: 1px solid #ced4da;
+                            border-radius: 4px;
+                            padding: 8px;
+                            background-color: white;
+                        }
+                        QComboBox:focus {
+                            border-color: #80bdff;
+                            outline: 0;
+                            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        }
+                    """)
                     form.addRow("Work Study:", ws)
                     
                     # Format availability from object to string for editing
@@ -538,19 +1003,55 @@ class WorkplaceTab(QWidget):
                     
                     avail = QTextEdit(avail_text)
                     avail.setMinimumHeight(100)
+                    avail.setStyleSheet("""
+                        QTextEdit {
+                            border: 1px solid #ced4da;
+                            border-radius: 4px;
+                            padding: 8px;
+                            background-color: white;
+                        }
+                        QTextEdit:focus {
+                            border-color: #80bdff;
+                            outline: 0;
+                            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                        }
+                    """)
                     form.addRow("Availability:", avail)
+                    
+                    # Provide format hint
+                    hint = QLabel("Format: Monday 09:00-17:00, Tuesday 10:00-15:00")
+                    hint.setStyleSheet("color: #6c757d; font-style: italic;")
+                    form.addRow("", hint)
                     
                     # Add Firebase option
                     use_firebase = QCheckBox("Update in Firebase")
                     use_firebase.setChecked(True)
+                    use_firebase.setStyleSheet("""
+                        QCheckBox {
+                            color: #495057;
+                        }
+                        QCheckBox::indicator {
+                            width: 18px;
+                            height: 18px;
+                        }
+                        QCheckBox::indicator:checked {
+                            background-color: #007bff;
+                            border: 2px solid #007bff;
+                            border-radius: 3px;
+                        }
+                    """)
                     form.addRow("", use_firebase)
                     
-                    layout.addLayout(form)
+                    card_layout.addLayout(form)
+                    layout.addWidget(content_card)
                     
                     btns = QHBoxLayout()
-                    save = StyleHelper.create_button("Save")
+                    btns.setSpacing(10)
+                    
+                    save = StyleHelper.create_button("Save Changes")
                     cancel = StyleHelper.create_button("Cancel", primary=False)
-                    btns.addWidget(save); btns.addWidget(cancel)
+                    btns.addWidget(save)
+                    btns.addWidget(cancel)
                     layout.addLayout(btns)
                     
                     save.clicked.connect(lambda: self.update_worker_firebase(
@@ -581,34 +1082,162 @@ class WorkplaceTab(QWidget):
             dialog = QDialog(self)
             dialog.setWindowTitle("Edit Worker")
             dialog.setMinimumWidth(500)
+            dialog.setStyleSheet("background-color: #f8f9fa;")
             layout = QVBoxLayout(dialog)
+            layout.setContentsMargins(20, 20, 20, 20)
+            layout.setSpacing(15)
+            
+            # Dialog title
+            title = QLabel(f"Edit {wr.get('First Name','')} {wr.get('Last Name','')}")
+            title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+            layout.addWidget(title)
+            
+            # Content card
+            content_card = QFrame()
+            content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+            content_card.setFrameShape(QFrame.StyledPanel)
+            content_card.setFrameShadow(QFrame.Raised)
+            card_layout = QVBoxLayout(content_card)
+            card_layout.setContentsMargins(20, 20, 20, 20)
+            card_layout.setSpacing(15)
 
             form = QFormLayout()
-            fn = QLineEdit(wr.get("First Name","")); form.addRow("First Name:", fn)
-            ln = QLineEdit(wr.get("Last Name",""));  form.addRow("Last Name:", ln)
-            em = QLineEdit(wr.get("Email","")); em.setReadOnly(True); form.addRow("Email:", em)
-            ws = QComboBox(); ws.addItems(["No","Yes"])
+            form.setVerticalSpacing(10)
+            form.setHorizontalSpacing(15)
+            
+            fn = QLineEdit(wr.get("First Name",""))
+            fn.setStyleSheet("""
+                QLineEdit {
+                    border: 1px solid #ced4da;
+                    border-radius: 4px;
+                    padding: 8px;
+                    background-color: white;
+                }
+                QLineEdit:focus {
+                    border-color: #80bdff;
+                    outline: 0;
+                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                }
+            """)
+            form.addRow("First Name:", fn)
+            
+            ln = QLineEdit(wr.get("Last Name",""))
+            ln.setStyleSheet("""
+                QLineEdit {
+                    border: 1px solid #ced4da;
+                    border-radius: 4px;
+                    padding: 8px;
+                    background-color: white;
+                }
+                QLineEdit:focus {
+                    border-color: #80bdff;
+                    outline: 0;
+                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                }
+            """)
+            form.addRow("Last Name:", ln)
+            
+            em = QLineEdit(wr.get("Email",""))
+            if wr.get("Email",""):  # Only make read-only if email exists
+                em.setReadOnly(True)
+                em.setStyleSheet("""
+                    QLineEdit {
+                        border: 1px solid #ced4da;
+                        border-radius: 4px;
+                        padding: 8px;
+                        background-color: #e9ecef;
+                        color: #495057;
+                    }
+                """)
+            else:
+                em.setStyleSheet("""
+                    QLineEdit {
+                        border: 1px solid #ced4da;
+                        border-radius: 4px;
+                        padding: 8px;
+                        background-color: white;
+                    }
+                    QLineEdit:focus {
+                        border-color: #80bdff;
+                        outline: 0;
+                        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                    }
+                """)
+            form.addRow("Email:", em)
+            
+            ws = QComboBox()
+            ws.addItems(["No","Yes"])
             ws.setCurrentText(str(wr.get("Work Study","No")))
+            ws.setStyleSheet("""
+                QComboBox {
+                    border: 1px solid #ced4da;
+                    border-radius: 4px;
+                    padding: 8px;
+                    background-color: white;
+                }
+                QComboBox:focus {
+                    border-color: #80bdff;
+                    outline: 0;
+                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                }
+            """)
             form.addRow("Work Study:", ws)
+            
             col = next((c for c in df.columns if 'available' in c.lower()), None)
             avail = QTextEdit(str(wr[col]) if col else "")
             avail.setMinimumHeight(100)
+            avail.setStyleSheet("""
+                QTextEdit {
+                    border: 1px solid #ced4da;
+                    border-radius: 4px;
+                    padding: 8px;
+                    background-color: white;
+                }
+                QTextEdit:focus {
+                    border-color: #80bdff;
+                    outline: 0;
+                    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+                }
+            """)
             form.addRow("Availability:", avail)
+            
+            # Provide format hint
+            hint = QLabel("Format: Monday 09:00-17:00, Tuesday 10:00-15:00")
+            hint.setStyleSheet("color: #6c757d; font-style: italic;")
+            form.addRow("", hint)
             
             # Add Firebase option if enabled
             if self.firebase_enabled:
                 use_firebase = QCheckBox("Also save to Firebase")
                 use_firebase.setChecked(True)
+                use_firebase.setStyleSheet("""
+                    QCheckBox {
+                        color: #495057;
+                    }
+                    QCheckBox::indicator {
+                        width: 18px;
+                        height: 18px;
+                    }
+                    QCheckBox::indicator:checked {
+                        background-color: #007bff;
+                        border: 2px solid #007bff;
+                        border-radius: 3px;
+                    }
+                """)
                 form.addRow("", use_firebase)
             else:
                 use_firebase = None
                 
-            layout.addLayout(form)
+            card_layout.addLayout(form)
+            layout.addWidget(content_card)
 
             btns = QHBoxLayout()
-            save = StyleHelper.create_button("Save")
+            btns.setSpacing(10)
+            
+            save = StyleHelper.create_button("Save Changes")
             cancel = StyleHelper.create_button("Cancel", primary=False)
-            btns.addWidget(save); btns.addWidget(cancel)
+            btns.addWidget(save)
+            btns.addWidget(cancel)
             layout.addLayout(btns)
 
             save.clicked.connect(lambda: self.update_worker(
@@ -1016,19 +1645,83 @@ class WorkplaceTab(QWidget):
 
         dialog = QDialog(self)
         dialog.setWindowTitle("Generate Schedule")
-        dialog.setMinimumWidth(400)
+        dialog.setMinimumWidth(500)
+        dialog.setStyleSheet("background-color: #f8f9fa;")
         L = QVBoxLayout(dialog)
+        L.setContentsMargins(20, 20, 20, 20)
+        L.setSpacing(15)
+        
+        # Dialog title
+        title = QLabel("Schedule Generation Settings")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        L.addWidget(title)
+        
+        # Content card
+        content_card = QFrame()
+        content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        content_card.setFrameShape(QFrame.StyledPanel)
+        content_card.setFrameShadow(QFrame.Raised)
+        card_layout = QVBoxLayout(content_card)
+        card_layout.setContentsMargins(20, 20, 20, 20)
+        card_layout.setSpacing(15)
+        
         form = QFormLayout()
-        max_hours   = QSpinBox(); max_hours.setRange(1,40); max_hours.setValue(20)
-        max_workers = QSpinBox(); max_workers.setRange(1,10); max_workers.setValue(1)
-        form.addRow("Max Hours Per Worker:",   max_hours)
+        form.setVerticalSpacing(15)
+        form.setHorizontalSpacing(15)
+        
+        max_hours = QSpinBox()
+        max_hours.setRange(1, 40)
+        max_hours.setValue(20)
+        max_hours.setStyleSheet("""
+            QSpinBox {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+                min-width: 100px;
+            }
+            QSpinBox:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Max Hours Per Worker:", max_hours)
+        
+        max_workers = QSpinBox()
+        max_workers.setRange(1, 10)
+        max_workers.setValue(1)
+        max_workers.setStyleSheet("""
+            QSpinBox {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+                min-width: 100px;
+            }
+            QSpinBox:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
         form.addRow("Max Workers Per Shift:", max_workers)
-        L.addLayout(form)
+        
+        # Add a note about work study students
+        note = QLabel("Note: Work study students will always be assigned exactly 5 hours per week.")
+        note.setStyleSheet("color: #6c757d; font-style: italic;")
+        form.addRow("", note)
+        
+        card_layout.addLayout(form)
+        L.addWidget(content_card)
 
         btns = QHBoxLayout()
-        gen_btn = StyleHelper.create_button("Generate")
-        cancel  = StyleHelper.create_button("Cancel", primary=False)
-        btns.addWidget(gen_btn); btns.addWidget(cancel)
+        btns.setSpacing(10)
+        
+        gen_btn = StyleHelper.create_action_button("Generate Schedule")
+        cancel = StyleHelper.create_button("Cancel", primary=False)
+        btns.addWidget(gen_btn)
+        btns.addWidget(cancel)
         L.addLayout(btns)
 
         gen_btn.clicked.connect(lambda: self.do_generate_schedule(
@@ -1218,9 +1911,59 @@ class WorkplaceTab(QWidget):
         dialog = QDialog(self)
         dialog.max_per_shift = max_per_shift
         dialog.setWindowTitle("Generated Schedule")
-        dialog.setMinimumSize(1000,700)
+        dialog.setWindowIcon(QIcon("assets/icon.png"))
+        
+        # Make the dialog larger - either fullscreen or 80% of screen size
+        screen_size = QApplication.desktop().screenGeometry()
+        dialog.resize(int(screen_size.width() * 0.8), int(screen_size.height() * 0.8))
+
         L = QVBoxLayout(dialog)
+        L.setContentsMargins(20, 20, 20, 20)
+        L.setSpacing(15)
+        
+        # Dialog title
+        title = QLabel(f"{self.workplace.replace('_',' ').title()} Schedule")
+        title.setStyleSheet("font-size: 22px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        L.addWidget(title)
+        
+        # Schedule card
+        schedule_card = QFrame()
+        schedule_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        schedule_card.setFrameShape(QFrame.StyledPanel)
+        schedule_card.setFrameShadow(QFrame.Raised)
+        card_layout = QVBoxLayout(schedule_card)
+        card_layout.setContentsMargins(15, 15, 15, 15)
+        card_layout.setSpacing(15)
+        
         tabs = QTabWidget()
+        tabs.setDocumentMode(True)
+        tabs.setStyleSheet("""
+            QTabWidget::pane {
+                border-top: 1px solid #dee2e6;
+                background-color: white;
+                border-radius: 0px 8px 8px 8px;
+            }
+            QTabBar::tab {
+                background-color: #e9ecef;
+                color: #495057;
+                padding: 10px 20px;
+                border: 1px solid #dee2e6;
+                border-bottom: none;
+                border-top-left-radius: 8px;
+                border-top-right-radius: 8px;
+                min-width: 80px;
+                font-weight: 500;
+            }
+            QTabBar::tab:selected {
+                background-color: white;
+                border-bottom: 3px solid #007bff;
+                color: #007bff;
+                font-weight: bold;
+            }
+            QTabBar::tab:hover:!selected {
+                background-color: #f8f9fa;
+            }
+        """)
 
         # collect rows
         all_rows = []
@@ -1233,27 +1976,46 @@ class WorkplaceTab(QWidget):
             day_tables[day] = rows
 
         def build_table(rows):
-            tbl = QTableWidget()
+            tbl = ModernTableWidget()
             tbl.setColumnCount(5)
-            tbl.setHorizontalHeaderLabels(["Day","Start","End","Assigned","Actions"])
+            tbl.setHorizontalHeaderLabels(["Day", "Start", "End", "Assigned", "Actions"])
             tbl.setRowCount(len(rows))
             for i, (d, st, en, assigned, orig_idx) in enumerate(rows):
                 itm = QTableWidgetItem(d)
                 itm.setFlags(itm.flags() & ~Qt.ItemIsEditable)
-                tbl.setItem(i,0,itm)
+                tbl.setItem(i, 0, itm)
                 s_it = QTableWidgetItem(format_time_ampm(st))
-                tbl.setItem(i,1,s_it)
+                tbl.setItem(i, 1, s_it)
                 e_it = QTableWidgetItem(format_time_ampm(en))
-                tbl.setItem(i,2,e_it)
+                tbl.setItem(i, 2, e_it)
                 a_it = QTableWidgetItem(assigned)
                 if "Unfilled" in assigned:
-                    a_it.setBackground(QColor(255,200,200))
+                    a_it.setBackground(QColor(255, 200, 200))
                 a_it.setFlags(a_it.flags() & ~Qt.ItemIsEditable)
-                tbl.setItem(i,3,a_it)
-                # actions
-                ew = QWidget(); ewl = QHBoxLayout(ew); ewl.setContentsMargins(0,0,0,0)
-                btn = QPushButton("Edit"); btn.setMinimumWidth(80)
-                btn.setStyleSheet("background-color:#ffc107; padding:6px;")
+                tbl.setItem(i, 3, a_it)
+                
+                # Fix action buttons
+                action_widget = QWidget()
+                action_layout = QHBoxLayout(action_widget)
+                action_layout.setContentsMargins(5, 2, 5, 2)
+                action_layout.setSpacing(5)
+                action_layout.setAlignment(Qt.AlignCenter)
+                
+                btn = QPushButton("Edit")
+                btn.setFixedWidth(80)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #ffc107;
+                        color: #212529;
+                        border: none;
+                        padding: 5px 10px;
+                        border-radius: 3px;
+                        font-weight: bold;
+                    }
+                    QPushButton:hover {
+                        background-color: #e0a800;
+                    }
+                """)
                 def make_cb(day, idx, row_idx, table):
                     return lambda: self.edit_shift_assignment(
                         day,
@@ -1264,9 +2026,12 @@ class WorkplaceTab(QWidget):
                         dialog
                     )
                 btn.clicked.connect(make_cb(d, orig_idx, i, tbl))
-                ewl.addWidget(btn); ewl.addStretch()
-                tbl.setCellWidget(i,4,ew)
+                action_layout.addWidget(btn)
+                
+                tbl.setCellWidget(i, 4, action_widget)
+            
             tbl.resizeColumnsToContents()
+            tbl.setColumnWidth(4, 120)  # Force Actions column width
             tbl.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
             return tbl
 
@@ -1276,70 +2041,114 @@ class WorkplaceTab(QWidget):
         # All
         tabs.addTab(build_table(all_rows), "All")
 
-        L.addWidget(tabs)
+        card_layout.addWidget(tabs)
+        L.addWidget(schedule_card)
+        
+        # Summary card
+        summary_card = QFrame()
+        summary_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        summary_card.setFrameShape(QFrame.StyledPanel)
+        summary_card.setFrameShadow(QFrame.Raised)
+        summary_layout = QVBoxLayout(summary_card)
+        summary_layout.setContentsMargins(15, 15, 15, 15)
+        summary_layout.setSpacing(15)
+        
+        # Summary title
+        summary_title = QLabel("Worker Hours Summary")
+        summary_title.setStyleSheet("font-size: 18px; font-weight: bold; color: #495057;")
+        summary_layout.addWidget(summary_title)
+        
+        # Warning labels
+        if low_hours:
+            lbl = QLabel(f"Workers with less than 4 hours: {', '.join(low_hours)}")
+            lbl.setStyleSheet("color: #fd7e14; font-weight: bold;")
+            lbl.setWordWrap(True)
+            summary_layout.addWidget(lbl)
+        if unassigned:
+            lbl = QLabel(f"Workers with no hours: {', '.join(unassigned)}")
+            lbl.setStyleSheet("color: #dc3545; font-weight: bold;")
+            lbl.setWordWrap(True)
+            summary_layout.addWidget(lbl)
 
-        # worker hours summary
-        hrs_tbl = QTableWidget(); hrs_tbl.setColumnCount(3)
-        hrs_tbl.setHorizontalHeaderLabels(["Worker","Hours","Status"])
+        # worker hours summary table
+        hrs_tbl = ModernTableWidget()
+        hrs_tbl.setColumnCount(3)
+        hrs_tbl.setHorizontalHeaderLabels(["Worker", "Hours", "Status"])
         sorted_ws = sorted(assigned_hours.items(), key=lambda x: x[1], reverse=True)
         emails = {w['email'] for w in (all_workers or [])}
         for em in emails:
             if em not in assigned_hours:
-                sorted_ws.append((em,0))
+                sorted_ws.append((em, 0))
         hrs_tbl.setRowCount(len(sorted_ws))
-        for i,(em,h) in enumerate(sorted_ws):
+        for i, (em, h) in enumerate(sorted_ws):
             name = em
             for w in all_workers or []:
                 if w['email'] == em:
                     name = f"{w['first_name']} {w['last_name']}"
                     break
-            itm = QTableWidgetItem(name); hrs_tbl.setItem(i,0, itm)
+            itm = QTableWidgetItem(name)
+            hrs_tbl.setItem(i, 0, itm)
+            
             hi = QTableWidgetItem(f"{h:.1f}")
             if h == 0:
-                hi.setBackground(QColor(255,200,200))
+                hi.setBackground(QColor(255, 200, 200))
             elif h < 4:
-                hi.setBackground(QColor(255,255,200))
-            hrs_tbl.setItem(i,1, hi)
+                hi.setBackground(QColor(255, 255, 200))
+            hrs_tbl.setItem(i, 1, hi)
+            
             if h == 0:
-                st = QTableWidgetItem("Unassigned"); st.setBackground(QColor(255,200,200))
+                st = QTableWidgetItem("Unassigned")
+                st.setBackground(QColor(255, 200, 200))
             elif h < 4:
-                st = QTableWidgetItem("Low Hours");  st.setBackground(QColor(255,255,200))
+                st = QTableWidgetItem("Low Hours")
+                st.setBackground(QColor(255, 255, 200))
             else:
                 st = QTableWidgetItem("OK")
-            hrs_tbl.setItem(i,2, st)
+            hrs_tbl.setItem(i, 2, st)
+        
         hrs_tbl.resizeColumnsToContents()
-        if low_hours:
-            lbl=QLabel(f"Workers <4h: {', '.join(low_hours)}")
-            lbl.setStyleSheet("color:red;")
-            L.addWidget(lbl)
-        if unassigned:
-            lbl=QLabel(f"No hours: {', '.join(unassigned)}")
-            lbl.setStyleSheet("color:red;font-weight:bold;")
-            L.addWidget(lbl)
-        L.addWidget(hrs_tbl)
+        summary_layout.addWidget(hrs_tbl)
+        L.addWidget(summary_card)
 
         dialog.hours_table = hrs_tbl
-        
-        dialog.schedule       = schedule
+        dialog.schedule = schedule
         dialog.assigned_hours = assigned_hours
-        dialog.all_workers    = all_workers
+        dialog.all_workers = all_workers
 
         # bottom buttons
         btm = QHBoxLayout()
-        save  = StyleHelper.create_button("Save Schedule")
-        email = StyleHelper.create_button("Email Schedule")
-        prnt  = StyleHelper.create_button("Print Schedule")
+        btm.setSpacing(10)
+        
+        save = StyleHelper.create_button("Save Schedule", icon="icons/save.png")
+        email = StyleHelper.create_button("Email Schedule", icon="icons/email.png")
+        prnt = StyleHelper.create_button("Print Schedule", icon="icons/print.png")
         close = StyleHelper.create_button("Close", primary=False)
-        override_btn = StyleHelper.create_button("Override Shifts")
+        override_btn = StyleHelper.create_button("Override Shifts", icon="icons/edit.png")
         
         # Add Firebase save button if Firebase is enabled
         if self.firebase_enabled:
-            save_fb = StyleHelper.create_button("Save to Firebase")
-            save_fb.setStyleSheet("background-color: #28a745; color: white;")
+            save_fb = StyleHelper.create_button("Save to Firebase", primary=False)
+            save_fb.setStyleSheet("""
+                QPushButton {
+                    background-color: #28a745;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    min-height: 36px;
+                }
+                QPushButton:hover {
+                    background-color: #218838;
+                }
+                QPushButton:pressed {
+                    background-color: #1e7e34;
+                }
+            """)
             save_fb.clicked.connect(lambda: self.save_schedule_to_firebase(dialog, schedule))
             btm.addWidget(save_fb)
         
-        for b in (save, email, prnt, close, override_btn):
+        for b in (save, email, prnt, override_btn, close):
             btm.addWidget(b)
         L.addLayout(btm)
 
@@ -1431,46 +2240,100 @@ class WorkplaceTab(QWidget):
         dlg.setWindowTitle(
             f"Edit Shift: {day} {format_time_ampm(shift['start'])}-{format_time_ampm(shift['end'])}"
         )
-        dlg.setMinimumSize(500,500)
+        dlg.setMinimumSize(500, 500)
+        dlg.setStyleSheet("background-color: #f8f9fa;")
         L = QVBoxLayout(dlg)
+        L.setContentsMargins(20, 20, 20, 20)
+        L.setSpacing(15)
+        
+        # Dialog title
+        title = QLabel(f"Edit Shift: {day} {format_time_ampm(shift['start'])}-{format_time_ampm(shift['end'])}")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        L.addWidget(title)
+        
+        # Content card
+        content_card = QFrame()
+        content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        content_card.setFrameShape(QFrame.StyledPanel)
+        content_card.setFrameShadow(QFrame.Raised)
+        card_layout = QVBoxLayout(content_card)
+        card_layout.setContentsMargins(15, 15, 15, 15)
+        card_layout.setSpacing(15)
 
         inst = QLabel(
             f"Select workers for {day} "
             f"{format_time_ampm(shift['start'])} - {format_time_ampm(shift['end'])}:"
         )
-        inst.setStyleSheet("font-weight:bold; font-size:14px;")
-        L.addWidget(inst)
+        inst.setStyleSheet("font-weight:bold; font-size:14px; color: #495057;")
+        card_layout.addWidget(inst)
 
         avail = shift.get('all_available', [])
         if not avail:
             msg = QLabel(
                 "No workers are available during this time slot based on availability."
             )
-            msg.setStyleSheet("color:red;")
+            msg.setStyleSheet("color:#dc3545; font-weight:bold;")
             msg.setWordWrap(True)
-            L.addWidget(msg)
+            card_layout.addWidget(msg)
             note = QLabel("Showing all workers; some may be unavailable.")
             note.setWordWrap(True)
-            L.addWidget(note)
+            note.setStyleSheet("color:#6c757d; font-style:italic;")
+            card_layout.addWidget(note)
             avail = all_workers
 
         lst = QListWidget()
-        lst.setStyleSheet("QListWidget::item { padding:5px; }")
+        lst.setStyleSheet("""
+            QListWidget {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                background-color: white;
+            }
+            QListWidget::item {
+                padding: 10px;
+                border-bottom: 1px solid #e9ecef;
+            }
+            QListWidget::item:selected {
+                background-color: #e9ecef;
+                color: #212529;
+            }
+            QListWidget::item:hover {
+                background-color: #f8f9fa;
+            }
+        """)
+        
         for w in avail:
             it = QListWidgetItem(f"{w['first_name']} {w['last_name']}")
             it.setData(Qt.UserRole, w)
-            it.setCheckState(
-                Qt.Checked if f"{w['first_name']} {w['last_name']}" in shift['assigned']
-                else Qt.Unchecked
-            )
+            is_selected = f"{w['first_name']} {w['last_name']}" in shift['assigned']
+            
+            if is_selected:
+                it.setCheckState(Qt.Checked)
+                it.setBackground(QColor(232, 245, 233))  # Light green for selected
+            else:
+                it.setCheckState(Qt.Unchecked)
+            
             lst.setSelectionMode(QListWidget.NoSelection)
             lst.addItem(it)
-        L.addWidget(lst)
+        
+        if parent_dialog.max_per_shift > 1:
+            max_note = QLabel(f"Maximum {parent_dialog.max_per_shift} workers can be assigned to this shift.")
+            max_note.setStyleSheet("color:#6c757d; font-style:italic;")
+            card_layout.addWidget(max_note)
+            
+        card_layout.addWidget(lst)
+        L.addWidget(content_card)
 
         btns = QHBoxLayout()
-        save   = StyleHelper.create_button("Save");   save.setMinimumWidth(120)
-        cancel = StyleHelper.create_button("Cancel", primary=False); cancel.setMinimumWidth(120)
-        btns.addWidget(save); btns.addWidget(cancel)
+        btns.setSpacing(10)
+        
+        save = StyleHelper.create_button("Save Changes")
+        save.setMinimumWidth(120)
+        
+        cancel = StyleHelper.create_button("Cancel", primary=False)
+        cancel.setMinimumWidth(120)
+        
+        btns.addWidget(save)
+        btns.addWidget(cancel)
         L.addLayout(btns)
 
         save.clicked.connect(lambda: self.update_shift_assignment(
@@ -1670,31 +2533,99 @@ class WorkplaceTab(QWidget):
     def email_schedule_dialog(self, schedule):
         dialog = QDialog(self)
         dialog.setWindowTitle("Email Schedule")
-        dialog.setMinimumWidth(400)
+        dialog.setMinimumWidth(500)
+        dialog.setStyleSheet("background-color: #f8f9fa;")
         L = QVBoxLayout(dialog)
+        L.setContentsMargins(20, 20, 20, 20)
+        L.setSpacing(15)
+        
+        # Dialog title
+        title = QLabel("Email Schedule to Workers")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        L.addWidget(title)
+        
+        # Content card
+        content_card = QFrame()
+        content_card.setStyleSheet("background-color: white; border-radius: 8px; border: 1px solid #dee2e6;")
+        content_card.setFrameShape(QFrame.StyledPanel)
+        content_card.setFrameShadow(QFrame.Raised)
+        card_layout = QVBoxLayout(content_card)
+        card_layout.setContentsMargins(20, 20, 20, 20)
+        card_layout.setSpacing(15)
 
         form = QFormLayout()
-        sender = QLineEdit(); form.addRow("Sender Email:", sender)
-        pwd = QLineEdit(); pwd.setEchoMode(QLineEdit.Password)
+        form.setVerticalSpacing(10)
+        form.setHorizontalSpacing(15)
+        
+        sender = QLineEdit()
+        sender.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QLineEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Sender Email:", sender)
+        
+        pwd = QLineEdit()
+        pwd.setEchoMode(QLineEdit.Password)
+        pwd.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QLineEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
         form.addRow("Sender Password:", pwd)
+        
         note = QLabel(
             "Note: Gmail may require an App Password under your Google Account Security settings."
         )
         note.setWordWrap(True)
-        note.setStyleSheet("font-style:italic;color:#666;")
+        note.setStyleSheet("font-style:italic; color:#6c757d;")
         form.addRow("", note)
 
         rcpt = QTextEdit()
         for w in self.get_workers():
             if w['email']:
                 rcpt.append(w['email'])
+        rcpt.setStyleSheet("""
+            QTextEdit {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+            }
+            QTextEdit:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
         form.addRow("Recipients:", rcpt)
-        L.addLayout(form)
+        
+        card_layout.addLayout(form)
+        L.addWidget(content_card)
 
         btns = QHBoxLayout()
-        send   = StyleHelper.create_button("Send")
+        btns.setSpacing(10)
+        
+        send = StyleHelper.create_button("Send Schedule")
         cancel = StyleHelper.create_button("Cancel", primary=False)
-        btns.addWidget(send); btns.addWidget(cancel)
+        btns.addWidget(send)
+        btns.addWidget(cancel)
         L.addLayout(btns)
 
         send.clicked.connect(lambda: self.send_schedule_email(
@@ -1714,10 +2645,18 @@ class WorkplaceTab(QWidget):
             )
             return
         try:
+            progress = QProgressDialog("Sending email...", "Cancel", 0, 100, self)
+            progress.setWindowTitle("Sending Email")
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setValue(10)
+            
             success, msg = send_schedule_email(
                 self.workplace, schedule, recipients,
                 sender_email, sender_password
             )
+            
+            progress.setValue(100)
+            
             if success:
                 QMessageBox.information(dialog, "Success", msg)
                 dialog.accept()
@@ -1731,22 +2670,56 @@ class WorkplaceTab(QWidget):
         try:
             printer = QPrinter()
             dlg = QPrintDialog(printer, self)
+            dlg.setWindowTitle("Print Schedule")
             if dlg.exec_() != QDialog.Accepted:
                 return
+                
             doc = QTextDocument()
-            html = f"<html><body><h1>{self.workplace.replace('_',' ').title()} Schedule</h1>"
+            
+            # Create a nicer HTML table
+            html = f"""
+            <html>
+            <head>
+                <style>
+                    body {{ font-family: 'Segoe UI', Arial, sans-serif; color: #333; }}
+                    h1 {{ color: #007bff; font-size: 24px; text-align: center; }}
+                    h2 {{ color: #495057; font-size: 20px; margin-top: 20px; }}
+                    table {{ border-collapse: collapse; width: 100%; margin-bottom: 20px; }}
+                    th {{ background-color: #343a40; color: white; padding: 8px; text-align: left; }}
+                    td {{ padding: 8px; border-bottom: 1px solid #dee2e6; }}
+                    tr:nth-child(even) {{ background-color: #f8f9fa; }}
+                    .unfilled {{ color: #dc3545; font-weight: bold; }}
+                </style>
+            </head>
+            <body>
+                <h1>{self.workplace.replace('_',' ').title()} Schedule</h1>
+            """
+            
             for day in DAYS:
                 if schedule.get(day):
-                    html += f"<h2>{day}</h2><table border='1'><tr><th>Start</th><th>End</th><th>Assigned</th></tr>"
+                    html += f"<h2>{day}</h2>"
+                    html += """<table>
+                        <tr>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Assigned</th>
+                        </tr>
+                    """
+                    
                     for s in schedule[day]:
-                        cls = ' style="color:red;"' if "Unfilled" in s['assigned'] else ""
-                        html += (
-                            f"<tr><td>{format_time_ampm(s['start'])}</td>"
-                            f"<td>{format_time_ampm(s['end'])}</td>"
-                            f"<td{cls}>{', '.join(s['assigned'])}</td></tr>"
-                        )
+                        cls = ' class="unfilled"' if "Unfilled" in s['assigned'] else ""
+                        html += f"""
+                        <tr>
+                            <td>{format_time_ampm(s['start'])}</td>
+                            <td>{format_time_ampm(s['end'])}</td>
+                            <td{cls}>{', '.join(s['assigned'])}</td>
+                        </tr>
+                        """
+                        
                     html += "</table>"
+                    
             html += "</body></html>"
+            
             doc.setHtml(html)
             doc.print_(printer)
             QMessageBox.information(self, "Success", "Schedule sent to printer.")
@@ -1782,6 +2755,9 @@ class WorkplaceTab(QWidget):
                 
                 self.load_hours_table()
                 progress.setValue(100)
+                
+                # Update last updated time
+                self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
                 
                 # Close progress dialog after a short delay
                 QTimer.singleShot(500, progress.close)
@@ -1892,6 +2868,9 @@ class WorkplaceTab(QWidget):
             
             progress.setValue(len(workers))
             
+            # Update last updated time
+            self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+            
             # Show results
             QMessageBox.information(self, "Export Complete", 
                                  f"Successfully exported {success_count} workers to Firebase.")
@@ -1919,6 +2898,12 @@ class WorkplaceTab(QWidget):
                                  "No workers found in Firebase for this workplace.")
                 return
             
+            # Create progress dialog
+            progress = QProgressDialog("Importing workers from Firebase...", "Cancel", 0, 100, self)
+            progress.setWindowTitle("Firebase Import")
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setValue(20)
+            
             # Create DataFrame
             rows = []
             for worker in firebase_workers:
@@ -1941,14 +2926,23 @@ class WorkplaceTab(QWidget):
                     "firebase_id": worker.get("id", "")  # Store Firebase ID for future reference
                 })
             
+            progress.setValue(60)
+            
             df = pd.DataFrame(rows)
             
             # Save to Excel
             path = os.path.join(DIRS['workplaces'], f"{self.workplace}.xlsx")
             df.to_excel(path, index=False)
             
+            progress.setValue(80)
+            
             # Reload workers table
             self.load_workers_table()
+            
+            progress.setValue(100)
+            
+            # Update last updated time
+            self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
             
             QMessageBox.information(self, "Import Complete", 
                                  f"Successfully imported {len(firebase_workers)} workers from Firebase.")
@@ -1965,10 +2959,18 @@ class WorkplaceTab(QWidget):
             return
         
         try:
+            # Create progress dialog
+            progress = QProgressDialog("Syncing hours of operation...", "Cancel", 0, 100, self)
+            progress.setWindowTitle("Firebase Sync")
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setValue(20)
+            
             # Get hours from Firebase
             hours = self.data_manager.get_hours_of_operation()
             
             if not hours:
+                progress.setValue(100)
+                
                 # If no hours in Firebase, ask if user wants to upload current hours
                 reply = QMessageBox.question(
                     self, "No Hours Found",
@@ -1986,25 +2988,49 @@ class WorkplaceTab(QWidget):
                                          "No hours of operation defined locally either.")
                         return
                     
+                    # Create new progress dialog for upload
+                    upload_progress = QProgressDialog("Uploading hours to Firebase...", "Cancel", 0, 100, self)
+                    upload_progress.setWindowTitle("Firebase Upload")
+                    upload_progress.setWindowModality(Qt.WindowModal)
+                    upload_progress.setValue(30)
+                    
                     # Save to Firebase
-                    if self.data_manager.update_hours_of_operation(local_hours):
+                    success = self.data_manager.update_hours_of_operation(local_hours)
+                    upload_progress.setValue(100)
+                    
+                    if success:
+                        # Update last updated time
+                        self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+                        
                         QMessageBox.information(self, "Upload Complete", 
                                              "Successfully uploaded hours of operation to Firebase.")
                     else:
                         QMessageBox.warning(self, "Upload Failed", 
                                          "Failed to upload hours of operation to Firebase.")
-                
                 return
+            
+            progress.setValue(70)
             
             # Update local app_data
             data = load_data()
             data.setdefault(self.workplace, {})['hours_of_operation'] = hours
+            
+            progress.setValue(85)
+            
             if save_data(data):
                 self.app_data = data
                 self.load_hours_table()
+                
+                # Update last updated time
+                self.last_updated = datetime.now().strftime("%Y-%m-%d %H:%M")
+                
+                progress.setValue(100)
+                
                 QMessageBox.information(self, "Sync Complete", 
                                      "Successfully synced hours of operation from Firebase.")
             else:
+                progress.setValue(100)
+                
                 QMessageBox.warning(self, "Sync Failed", 
                                  "Failed to save hours of operation locally.")
             

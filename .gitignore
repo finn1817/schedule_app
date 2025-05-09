@@ -1,1 +1,34 @@
+# Exclude all local data
+/workplaces/*.xlsx
+/workplaces/*.xls
+/saved_schedules/*.json
+/saved_schedules/*.xlsx
+/saved_schedules/*.xls
+/data/*.json
+
+# Firebase service account key (already in your gitignore)
 workplace-scheduler-ace38-firebase-adminsdk-fbsvc-4d7d358b05.json
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
