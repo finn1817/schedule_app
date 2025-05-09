@@ -46,7 +46,7 @@ def main():
 
     # 2. Install pip packages
     print_step("Installing Python dependencies...")
-    for pkg in ("pandas", "openpyxl", "matplotlib", "PyQt5", "email-validator", "Pillow"):
+    for pkg in ("pandas", "openpyxl", "matplotlib", "PyQt5", "email-validator", "Pillow", "firebase-admin"):
         print(f" - {pkg}")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
 
@@ -78,7 +78,37 @@ def main():
     else:
         print(f"Data file exists: {data_file}")
 
-    # 5. Desktop shortcut
+    # 5. Check for Firebase credentials
+    print_step("Checking Firebase credentials...")
+    firebase_creds = root / "workplace-scheduler-ace38-firebase-adminsdk-fbsvc-4d7d358b05.json"
+    if not firebase_creds.exists():
+        print(f"Warning: Firebase credentials file not found at {firebase_creds}")
+        print("Firebase functionality will be limited until credentials are added.")
+        
+        # Create placeholder for explanation
+        firebase_readme = root / "FIREBASE_SETUP.txt"
+        with firebase_readme.open("w") as f:
+            f.write("""
+FIREBASE SETUP INSTRUCTIONS
+==========================
+
+To enable Firebase functionality in the Workplace Scheduler app:
+
+1. Create a Firebase project at https://console.firebase.google.com/
+2. Go to Project Settings > Service Accounts
+3. Click "Generate new private key" button
+4. Download the JSON file
+5. Rename it to: workplace-scheduler-ace38-firebase-adminsdk-fbsvc-4d7d358b05.json
+6. Place it in the application root directory (same location as this file)
+7. Restart the application
+
+Once these steps are completed, Firebase functionality will be enabled.
+""")
+        print(f"Created Firebase setup instructions at {firebase_readme}")
+    else:
+        print(f"Firebase credentials file found at {firebase_creds}")
+
+    # 6. Desktop shortcut
     print_step("Creating desktop shortcut...")
     desktop = find_desktop_path()
     shortcut = desktop / "Workplace Scheduler.bat"

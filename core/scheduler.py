@@ -4,7 +4,11 @@ import random
 import logging
 from datetime import datetime
 from .parser import time_to_hour, format_time_ampm, parse_availability
+from .data import get_workers, get_hours_of_operation
 from core.config import DAYS
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 def hour_to_time_str(hour: float) -> str:
     """Convert decimal hour to HH:MM (24h), allowing values up to 24:00."""
@@ -42,12 +46,22 @@ def find_alternative_workers(workers: list,
     alts.sort(key=lambda w: assigned_hours.get(w['email'], 0))
     return alts
 
-def create_shifts_from_availability(hours_of_operation: dict,
-                                    workers: list,
-                                    workplace: str,
-                                    max_hours_per_worker: float,
-                                    max_workers_per_shift: int):
+def create_shifts_from_availability(hours_of_operation=None, workers=None, workplace_id=None, 
+                                    max_hours_per_worker=20.0, max_workers_per_shift=2):
     """
+    Create shifts from worker availability and hours of operation.
+    
+    This function can be called in two ways:
+    1. With hours_of_operation and workers directly provided
+    2. With just workplace_id provided (data fetched automatically)
+    
+    Args:
+        hours_of_operation: Dictionary of hours of operation by day
+        workers: List of worker data
+        workplace_id: Workplace ID (to fetch data if not provided directly)
+        max_hours_per_worker: Maximum hours per worker (default: 20.0)
+        max_workers_per_shift: Maximum workers per shift (default: 2)
+    
     Returns:
       schedule: dict[day, list of shift dicts],
       assigned_hours: dict[email, float],
@@ -57,6 +71,21 @@ def create_shifts_from_availability(hours_of_operation: dict,
       unfilled_shifts: list[shift dict],
       ws_issues: list[str]
     """
+    # Determine how the function was called and get data accordingly
+    if workplace_id and (hours_of_operation is None or workers is None):
+        # Fetch data from database
+        hours_of_operation = get_hours_of_operation(workplace_id)
+        workers = get_workers(workplace_id)
+    
+    # Validate data
+    if not hours_of_operation:
+        logger.warning(f"No hours of operation provided")
+        return {}, {}, [], [], {}, [], []
+        
+    if not workers:
+        logger.warning(f"No workers provided")
+        return {}, {}, [], [], {}, [], []
+    
     random.seed(datetime.now().timestamp())
 
     schedule = {}
@@ -124,8 +153,8 @@ def create_shifts_from_availability(hours_of_operation: dict,
             remaining       -= take
 
         if remaining > 0:
-            # mark issue—will show up in your ws_issues list
-            logging.warning(
+            # mark issue--will show up in your ws_issues list
+            logger.warning(
                 f"Work-study {w['first_name']} {w['last_name']} "
                 f"only got {5-remaining:.1f}h out of 5h"
             )
@@ -195,7 +224,7 @@ def create_shifts_from_availability(hours_of_operation: dict,
                     for x in chosen:
                         assigned_hours[x['email']] += (end_shift - cur)
 
-                    # record individual shifts—one entry per worker
+                    # record individual shifts--one entry per worker
                     for x in chosen:
                         schedule[day].append({
                             "start":        hour_to_time_str(cur),
@@ -206,7 +235,7 @@ def create_shifts_from_availability(hours_of_operation: dict,
                             "all_available": avail
                         })
 
-                    # if we didn’t fill up to max_workers, mark unfilled slots
+                    # if we didn't fill up to max_workers, mark unfilled slots
                     for _ in range(max_workers_per_shift - len(chosen)):
                         unfilled_shifts.append({
                             "day":        day,

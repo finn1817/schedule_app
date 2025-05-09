@@ -3,12 +3,16 @@
 from PyQt5.QtWidgets import (
     QDialog, QHBoxLayout, QVBoxLayout, QLabel, QTableWidget,
     QTableWidgetItem, QListWidget, QPushButton, QFormLayout,
-    QComboBox, QTimeEdit, QMessageBox
+    QComboBox, QTimeEdit, QMessageBox, QCheckBox, QProgressDialog
 )
 from PyQt5.QtCore import Qt
 from core.parser import time_to_hour, format_time_ampm
 from core.scheduler import is_worker_available, hour_to_time_str
-from core.config import DAYS
+from core.config import DAYS, firebase_available
+from core.data import get_data_manager
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ShiftOverrideDialog(QDialog):
     """
@@ -23,7 +27,10 @@ class ShiftOverrideDialog(QDialog):
         self.all_workers          = all_workers
         self.max_hours_per_worker = max_hours_per_worker
         self.max_per_shift        = max_per_shift
-
+        self.data_manager         = get_data_manager()
+        self.firebase_available   = firebase_available()
+        self.parent_dialog        = parent
+        
         self.setWindowTitle("Manual Shift Override")
         self.resize(900, 600)
         self._build_ui()
@@ -31,6 +38,12 @@ class ShiftOverrideDialog(QDialog):
 
     def _build_ui(self):
         main_layout = QVBoxLayout(self)
+        
+        # Firebase indicator if available
+        if self.firebase_available:
+            firebase_indicator = QLabel("✅ Firebase Connected - Changes can be saved to Firebase")
+            firebase_indicator.setStyleSheet("color: #28a745; font-weight: bold;")
+            main_layout.addWidget(firebase_indicator)
 
         # Top: schedule table + availability list
         top_layout = QHBoxLayout()
@@ -71,17 +84,29 @@ class ShiftOverrideDialog(QDialog):
         form.addRow("End   Time:", self.end_te)
         main_layout.addLayout(form)
 
+        # Add Firebase checkbox if available
+        if self.firebase_available:
+            self.save_to_firebase = QCheckBox("Save schedule to Firebase when closing")
+            self.save_to_firebase.setChecked(True)
+            main_layout.addWidget(self.save_to_firebase)
+
         # Buttons
         btn_layout = QHBoxLayout()
         add_btn   = QPushButton("Add Shift")
+        self.save_btn = QPushButton("Save Changes")
         close_btn = QPushButton("Close")
         btn_layout.addWidget(add_btn)
+        btn_layout.addWidget(self.save_btn)
         btn_layout.addStretch()
         btn_layout.addWidget(close_btn)
         main_layout.addLayout(btn_layout)
 
         add_btn.clicked.connect(self._on_add_shift)
-        close_btn.clicked.connect(self.reject)
+        self.save_btn.clicked.connect(self._on_save_changes)
+        close_btn.clicked.connect(self.close)
+        
+        # Style save button
+        self.save_btn.setStyleSheet("background-color: #28a745; color: white;")
 
     def _populate_schedule(self):
         """
@@ -152,7 +177,7 @@ class ShiftOverrideDialog(QDialog):
                                 "End time must be after start time.")
             return
 
-        # --- HERE’S THE FIX: only check is_worker_available, drop the hours cap ---
+        # --- HERE'S THE FIX: only check is_worker_available, drop the hours cap ---
         elig = [
             w for w in self.all_workers
             if is_worker_available(w, day, s_h, e_h)
@@ -193,3 +218,124 @@ class ShiftOverrideDialog(QDialog):
             self, "Shift Added",
             f"Added shift on {day} {format_time_ampm(start)} – {format_time_ampm(end)}"
         )
+        
+        # Update parent dialog if available
+        if hasattr(self.parent_dialog, 'update_worker_hours_tab') and hasattr(self.parent_dialog, 'hours_table'):
+            self.parent_dialog.update_worker_hours_tab(self.parent_dialog, self.parent_dialog.hours_table)
+
+    def _on_save_changes(self):
+        """Save current schedule to both local storage and Firebase if enabled"""
+        try:
+            # Show progress dialog
+            progress = QProgressDialog("Saving schedule changes...", None, 0, 100, self)
+            progress.setWindowTitle("Saving")
+            progress.setWindowModality(Qt.WindowModal)
+            progress.setValue(10)
+            progress.show()
+            
+            # Save locally
+            progress.setValue(30)
+            progress.setLabelText("Saving locally...")
+            
+            # Save to local storage
+            import os
+            import json
+            from core.config import DIRS
+            import pandas as pd
+            
+            # Determine current workplace from parent dialog or use fallback
+            workplace = None
+            if hasattr(self.parent_dialog, 'workplace'):
+                workplace = self.parent_dialog.workplace
+            elif hasattr(self.data_manager, 'current_workplace_id'):
+                workplace = self.data_manager.current_workplace_id
+            
+            if workplace:
+                # Save JSON
+                jp = os.path.join(DIRS['saved_schedules'], f"{workplace}_current.json")
+                with open(jp, "w") as f:
+                    json.dump(self.schedule, f, indent=4)
+                
+                # Save Excel
+                progress.setValue(50)
+                progress.setLabelText("Creating Excel file...")
+                
+                xp = os.path.join(DIRS['saved_schedules'], f"{workplace}_current.xlsx")
+                with pd.ExcelWriter(xp, engine='openpyxl') as writer:
+                    for day in DAYS:
+                        shifts = self.schedule.get(day, [])
+                        if not shifts: continue
+                        rows = [{
+                            "Start":    format_time_ampm(s['start']),
+                            "End":      format_time_ampm(s['end']),
+                            "Assigned": ", ".join(s['assigned'])
+                        } for s in shifts]
+                        pd.DataFrame(rows).to_excel(writer, sheet_name=day, index=False)
+                    
+                    # All shifts in one sheet
+                    all_rows = []
+                    for day, shifts in self.schedule.items():
+                        for s in shifts:
+                            all_rows.append({
+                                "Day":      day,
+                                "Start":    format_time_ampm(s['start']),
+                                "End":      format_time_ampm(s['end']),
+                                "Assigned": ", ".join(s['assigned'])
+                            })
+                    if all_rows:
+                        pd.DataFrame(all_rows).to_excel(writer, sheet_name="Full Schedule", index=False)
+                
+                # Save to Firebase if enabled and selected
+                if self.firebase_available and hasattr(self, 'save_to_firebase') and self.save_to_firebase.isChecked():
+                    progress.setValue(70)
+                    progress.setLabelText("Saving to Firebase...")
+                    
+                    # Format schedule for Firebase
+                    firebase_schedule = {
+                        "days": self.schedule,
+                        "created_at": self.data_manager.current_workplace_id,
+                        "workplace_id": workplace,
+                        "name": f"{workplace} Schedule (Override)"
+                    }
+                    
+                    # Set the current workplace in data manager
+                    self.data_manager.current_workplace_id = workplace
+                    
+                    # Save to Firebase
+                    result = self.data_manager.save_schedule(firebase_schedule)
+                    
+                    progress.setValue(90)
+                    
+                    if result:
+                        progress.setLabelText("Saved to Firebase successfully")
+                    else:
+                        progress.setLabelText("Failed to save to Firebase")
+                
+                progress.setValue(100)
+                
+                QMessageBox.information(self, "Success", "Schedule changes saved successfully.")
+            else:
+                progress.setValue(100)
+                QMessageBox.warning(self, "Warning", "Couldn't determine workplace - only saved to memory")
+        
+        except Exception as e:
+            logger.error(f"Error saving schedule changes: {e}")
+            QMessageBox.critical(self, "Error", f"Error saving schedule: {str(e)}")
+    
+    def closeEvent(self, event):
+        """Handle dialog close event"""
+        # Ask if user wants to save changes if they haven't clicked Save button
+        reply = QMessageBox.question(
+            self, "Save Changes?",
+            "Do you want to save your schedule changes before closing?",
+            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+            QMessageBox.Yes
+        )
+        
+        if reply == QMessageBox.Yes:
+            self._on_save_changes()
+            event.accept()
+        elif reply == QMessageBox.No:
+            event.accept()
+        else:
+            event.ignore()

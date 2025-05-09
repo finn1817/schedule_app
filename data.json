@@ -1,140 +1,764 @@
 {
-    "esports_lounge": {
-        "hours_of_operation": {
-            "Sunday": [
+    "version": "1.1.0",
+    "workplaces": {
+        "esports_lounge": {
+            "workers": [
                 {
-                    "start": "12:00",
-                    "end": "00:00"
-                }
-            ],
-            "Monday": [
+                    "first_name": "Greg",
+                    "last_name": "Aiv",
+                    "email": "example1@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 12:00-00:00, Wednesday 12:00-00:00, Friday 12:00-00:00"
+                },
                 {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Tuesday": [
+                    "first_name": "Daniel",
+                    "last_name": "Finn",
+                    "email": "finn1817@fredonia.edu",
+                    "work_study": false,
+                    "availability": {
+                        "Tuesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Saturday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Tuesday 12:00-00:00, Thursday 12:00-00:00, Monday 12:00-00:00, Saturday 12:00-00:00"
+                },
                 {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Wednesday": [
+                    "first_name": "Alan",
+                    "last_name": "Haim",
+                    "email": "johnex@example.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "14:00",
+                                "end": "18:00",
+                                "start_hour": 14.0,
+                                "end_hour": 18.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "14:00",
+                                "end": "00:00",
+                                "start_hour": 14.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "14:00",
+                                "end": "18:00",
+                                "start_hour": 14.0,
+                                "end_hour": 18.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 14:00-18:00, Wednesday 14:00-00:00, Friday 14:00-18:00"
+                },
                 {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Thursday": [
+                    "first_name": "Regenae",
+                    "last_name": "Walkters",
+                    "email": "janeex@example.com",
+                    "work_study": false,
+                    "availability": {
+                        "Tuesday": [
+                            {
+                                "start": "08:00",
+                                "end": "12:00",
+                                "start_hour": 8.0,
+                                "end_hour": 12.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Saturday": [
+                            {
+                                "start": "10:00",
+                                "end": "14:00",
+                                "start_hour": 10.0,
+                                "end_hour": 14.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Tuesday 08:00-12:00, Thursday 12:00-00:00, Saturday 10:00-14:00"
+                },
                 {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Friday": [
+                    "first_name": "Krish",
+                    "last_name": "Chawla",
+                    "email": "exone@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "10:00",
+                                "end": "14:00",
+                                "start_hour": 10.0,
+                                "end_hour": 14.0
+                            },
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "10:00",
+                                "end": "14:00",
+                                "start_hour": 10.0,
+                                "end_hour": 14.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 10:00-14:00, Monday 18:00-00:00, Wednesday 10:00-14:00, Friday 18:00-00:00"
+                },
                 {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Saturday": [
+                    "first_name": "Tatiana",
+                    "last_name": "Mata Diaz",
+                    "email": "testone@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Saturday": [
+                            {
+                                "start": "09:00",
+                                "end": "17:00",
+                                "start_hour": 9.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "09:00",
+                                "end": "17:00",
+                                "start_hour": 9.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Saturday 09:00-17:00, Sunday 09:00-17:00, Monday 12:00-00:00"
+                },
                 {
-                    "start": "12:00",
-                    "end": "00:00"
+                    "first_name": "Daniel",
+                    "last_name": "Senn",
+                    "email": "3example@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "08:00",
+                                "end": "12:00",
+                                "start_hour": 8.0,
+                                "end_hour": 12.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "08:00",
+                                "end": "12:00",
+                                "start_hour": 8.0,
+                                "end_hour": 12.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "08:00",
+                                "end": "12:00",
+                                "start_hour": 8.0,
+                                "end_hour": 12.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "08:00",
+                                "end": "12:00",
+                                "start_hour": 8.0,
+                                "end_hour": 12.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 08:00-12:00, Tuesday 08:00-12:00, Wednesday 08:00-12:00, Thursday 12:00-00:00, Friday 08:00-12:00"
+                },
+                {
+                    "first_name": "Zion",
+                    "last_name": "Williams",
+                    "email": "4test@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "16:00",
+                                "end": "20:00",
+                                "start_hour": 16.0,
+                                "end_hour": 20.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "16:00",
+                                "end": "20:00",
+                                "start_hour": 16.0,
+                                "end_hour": 20.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "16:00",
+                                "end": "00:00",
+                                "start_hour": 16.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 16:00-20:00, Wednesday 16:00-20:00, Friday 16:00-00:00, Sunday 12:00-16:00"
+                },
+                {
+                    "first_name": "Sebastian",
+                    "last_name": "Hurd",
+                    "email": "email1@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Tuesday": [
+                            {
+                                "start": "14:00",
+                                "end": "18:00",
+                                "start_hour": 14.0,
+                                "end_hour": 18.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "14:00",
+                                "end": "18:00",
+                                "start_hour": 14.0,
+                                "end_hour": 18.0
+                            }
+                        ],
+                        "Saturday": [
+                            {
+                                "start": "14:00",
+                                "end": "00:00",
+                                "start_hour": 14.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Tuesday 14:00-18:00, Thursday 14:00-18:00, Saturday 14:00-00:00"
+                },
+                {
+                    "first_name": "Jash",
+                    "last_name": "Hitesh Parekh",
+                    "email": "email2@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 12:00-16:00, Tuesday 12:00-16:00, Wednesday 12:00-16:00, Thursday 12:00-16:00, Friday 12:00-00:00"
+                },
+                {
+                    "first_name": "Olivia",
+                    "last_name": "Schindler",
+                    "email": "email3@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "16:00",
+                                "start_hour": 12.0,
+                                "end_hour": 16.0
+                            },
+                            {
+                                "start": "20:00",
+                                "end": "00:00",
+                                "start_hour": 20.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "09:00",
+                                "end": "17:00",
+                                "start_hour": 9.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "12:00",
+                                "end": "14:00",
+                                "start_hour": 12.0,
+                                "end_hour": 14.0
+                            },
+                            {
+                                "start": "17:00",
+                                "end": "00:00",
+                                "start_hour": 17.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "09:00",
+                                "end": "17:00",
+                                "start_hour": 9.0,
+                                "end_hour": 17.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Sunday 12:00-00:00, Monday 12:00-16:00, Monday 20:00-00:00, Wednesday 09:00-17:00, Thursday 12:00-14:00, Thursday 17:00-00:00, Friday 09:00-17:00"
+                },
+                {
+                    "first_name": "Gissel",
+                    "last_name": "O Rosa",
+                    "email": "email4@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "18:00",
+                                "end": "00:00",
+                                "start_hour": 18.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 18:00-00:00, Tuesday 18:00-00:00, Wednesday 18:00-00:00, Thursday 18:00-00:00, Friday 18:00-00:00"
+                },
+                {
+                    "first_name": "Jullian",
+                    "last_name": "Kemp",
+                    "email": "email5@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Saturday": [
+                            {
+                                "start": "12:00",
+                                "end": "20:00",
+                                "start_hour": 12.0,
+                                "end_hour": 20.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "20:00",
+                                "start_hour": 12.0,
+                                "end_hour": 20.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Saturday 12:00-20:00, Sunday 12:00-20:00, Tuesday 12:00-00:00"
+                },
+                {
+                    "first_name": "Nikko",
+                    "last_name": "Sandgren",
+                    "email": "email6@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Monday": [
+                            {
+                                "start": "09:00",
+                                "end": "12:00",
+                                "start_hour": 9.0,
+                                "end_hour": 12.0
+                            },
+                            {
+                                "start": "13:00",
+                                "end": "17:00",
+                                "start_hour": 13.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "09:00",
+                                "end": "12:00",
+                                "start_hour": 9.0,
+                                "end_hour": 12.0
+                            },
+                            {
+                                "start": "13:00",
+                                "end": "17:00",
+                                "start_hour": 13.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Friday": [
+                            {
+                                "start": "09:00",
+                                "end": "12:00",
+                                "start_hour": 9.0,
+                                "end_hour": 12.0
+                            },
+                            {
+                                "start": "13:00",
+                                "end": "17:00",
+                                "start_hour": 13.0,
+                                "end_hour": 17.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Monday 09:00-12:00, Monday 13:00-17:00, Wednesday 09:00-12:00, Wednesday 13:00-17:00, Friday 09:00-12:00, Friday 13:00-17:00, Sunday 12:00-00:00"
+                },
+                {
+                    "first_name": "Brooke",
+                    "last_name": "Kazmierczak",
+                    "email": "email7@email.com",
+                    "work_study": false,
+                    "availability": {
+                        "Tuesday": [
+                            {
+                                "start": "10:00",
+                                "end": "14:00",
+                                "start_hour": 10.0,
+                                "end_hour": 14.0
+                            },
+                            {
+                                "start": "15:00",
+                                "end": "19:00",
+                                "start_hour": 15.0,
+                                "end_hour": 19.0
+                            }
+                        ],
+                        "Wednesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Thursday": [
+                            {
+                                "start": "10:00",
+                                "end": "16:00",
+                                "start_hour": 10.0,
+                                "end_hour": 16.0
+                            },
+                            {
+                                "start": "15:00",
+                                "end": "19:00",
+                                "start_hour": 15.0,
+                                "end_hour": 19.0
+                            }
+                        ],
+                        "Saturday": [
+                            {
+                                "start": "10:00",
+                                "end": "00:00",
+                                "start_hour": 10.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Tuesday 10:00-14:00, Tuesday 15:00-19:00, Wednesday 12:00-00:00, Thursday 10:00-16:00, Thursday 15:00-19:00, Saturday 10:00-00:00"
+                },
+                {
+                    "first_name": "Test",
+                    "last_name": "Worker",
+                    "email": "email8@gmail.com",
+                    "work_study": false,
+                    "availability": {
+                        "Saturday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Saturday 12:00-00:00, Sunday 12:00-00:00, Monday 12:00-00:00"
+                },
+                {
+                    "first_name": "Weekend",
+                    "last_name": "Test",
+                    "email": "email9@email.com",
+                    "work_study": true,
+                    "availability": {
+                        "Saturday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Saturday 12:00-00:00, Sunday 12:00-00:00, Monday 12:00-00:00, Tuesday 12:00-00:00"
+                },
+                {
+                    "first_name": "Dummy",
+                    "last_name": "Test",
+                    "email": "email10@email.com",
+                    "work_study": true,
+                    "availability": {
+                        "Saturday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Sunday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Monday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ],
+                        "Tuesday": [
+                            {
+                                "start": "12:00",
+                                "end": "00:00",
+                                "start_hour": 12.0,
+                                "end_hour": 24.0
+                            }
+                        ]
+                    },
+                    "availability_text": "Saturday 12:00-00:00, Sunday 12:00-00:00, Monday 12:00-00:00, Tuesday 12:00-00:00"
                 }
             ]
         }
     },
-    "it_service_center": {
-        "hours_of_operation": {
-            "Sunday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Monday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Tuesday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Wednesday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Thursday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Friday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ],
-            "Saturday": [
-                {
-                    "start": "09:00",
-                    "end": "17:00"
-                }
-            ]
-        }
-    },
-    "esports_arena": {
-        "hours_of_operation": {
-            "Sunday": [
-                {
-                    "start": "12:00",
-                    "end": "00:00"
-                }
-            ],
-            "Monday": [
-                {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Tuesday": [
-                {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Wednesday": [
-                {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Thursday": [
-                {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Friday": [
-                {
-                    "start": "14:00",
-                    "end": "00:00"
-                }
-            ],
-            "Saturday": [
-                {
-                    "start": "12:00",
-                    "end": "00:00"
-                }
-            ]
-        }
-    }
+    "last_updated": "2025-05-08T17:58:20.252676"
 }
