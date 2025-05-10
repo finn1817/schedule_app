@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem, QFileDialog, QMessageBox,
     QTabWidget, QDialog, QFormLayout, QSpinBox, QComboBox,
     QLineEdit, QTextEdit, QHeaderView, QListWidget, QListWidgetItem,
-    QProgressDialog, QCheckBox, QFrame
+    QProgressDialog, QCheckBox, QFrame, QSizePolicy
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QFont
@@ -223,6 +223,8 @@ class WorkplaceTab(QWidget):
         self.workers_table.setHorizontalHeaderLabels([
             "First Name", "Last Name", "Email", "Work Study", "Availability", "Actions"
         ])
+        self.workers_table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.workers_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.load_workers_table()
         L.addWidget(self.workers_table)
 
@@ -402,47 +404,64 @@ class WorkplaceTab(QWidget):
 
                 actions = QWidget()
                 hl = QHBoxLayout(actions)
-                hl.setContentsMargins(5, 2, 5, 2)
-                hl.setSpacing(5)
-                hl.setAlignment(Qt.AlignCenter)  # Center the buttons
-                
-                e = QPushButton("Edit")
-                e.setFixedWidth(100)  # Make buttons a fixed width
-                e.setStyleSheet("""
+                hl.setContentsMargins(0, 0, 0, 0)
+                hl.setSpacing(8)
+                hl.setAlignment(Qt.AlignCenter)
+                ROW_HEIGHT = 36
+                btn = QPushButton("Edit")
+                btn.setFixedWidth(70)
+                btn.setMinimumHeight(28)
+                btn.setMaximumHeight(28)
+                btn.setStyleSheet("""
                     QPushButton {
                         background-color: #ffc107;
                         color: #212529;
                         border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
                         font-weight: bold;
+                        min-height: 24px;
+                        margin: 2px;
                     }
                     QPushButton:hover {
                         background-color: #e0a800;
                     }
+                    QPushButton:pressed {
+                        background-color: #d39e00;
+                    }
                 """)
-                e.clicked.connect(lambda _,r=i,em=em: self.edit_worker_dialog(r,em))
+                btn.clicked.connect(lambda _,r=i,em=em: self.edit_worker_dialog(r,em))
                 
                 d = QPushButton("Delete")
-                d.setFixedWidth(100)  # Make buttons a fixed width
+                d.setFixedWidth(70)
+                d.setMinimumHeight(28)
+                d.setMaximumHeight(28)
                 d.setStyleSheet("""
                     QPushButton {
                         background-color: #dc3545;
                         color: white;
                         border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
                         font-weight: bold;
+                        min-height: 24px;
+                        margin: 2px;
                     }
                     QPushButton:hover {
                         background-color: #c82333;
                     }
+                    QPushButton:pressed {
+                        background-color: #bd2130;
+                    }
                 """)
                 d.clicked.connect(lambda _,em=em: self.delete_worker(em))
                 
-                hl.addWidget(e)
+                actions.setMinimumHeight(ROW_HEIGHT)
+                actions.setMaximumHeight(ROW_HEIGHT)
+                hl.addWidget(btn)
                 hl.addWidget(d)
                 self.workers_table.setCellWidget(i,5,actions)
+                self.workers_table.setRowHeight(i, ROW_HEIGHT)
 
             self.workers_table.resizeColumnsToContents()
             self.tabs.setCurrentIndex(0)
@@ -482,49 +501,66 @@ class WorkplaceTab(QWidget):
 
                 actions = QWidget()
                 hl = QHBoxLayout(actions)
-                hl.setContentsMargins(5, 2, 5, 2)
-                hl.setSpacing(5)
-                hl.setAlignment(Qt.AlignCenter)  # Center the buttons
-                
-                e = QPushButton("Edit")
-                e.setFixedWidth(90)  # Make buttons a fixed width
-                e.setStyleSheet("""
+                hl.setContentsMargins(0, 0, 0, 0)
+                hl.setSpacing(8)
+                hl.setAlignment(Qt.AlignCenter)
+                ROW_HEIGHT = 36
+                btn = QPushButton("Edit")
+                btn.setFixedWidth(70)
+                btn.setMinimumHeight(28)
+                btn.setMaximumHeight(28)
+                btn.setStyleSheet("""
                     QPushButton {
                         background-color: #ffc107;
                         color: #212529;
                         border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
                         font-weight: bold;
+                        min-height: 24px;
+                        margin: 2px;
                     }
                     QPushButton:hover {
                         background-color: #e0a800;
                     }
+                    QPushButton:pressed {
+                        background-color: #d39e00;
+                    }
                 """)
-                e.clicked.connect(lambda _,r=i,em=em,wid=worker.get('id',''): 
+                btn.clicked.connect(lambda _,r=i,em=em,wid=worker.get('id',''): 
                                  self.edit_worker_dialog(r, em, worker_id=wid))
                 
                 d = QPushButton("Delete")
-                d.setFixedWidth(90)  # Make buttons a fixed width
+                d.setFixedWidth(70)
+                d.setMinimumHeight(28)
+                d.setMaximumHeight(28)
                 d.setStyleSheet("""
                     QPushButton {
                         background-color: #dc3545;
                         color: white;
                         border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
                         font-weight: bold;
+                        min-height: 24px;
+                        margin: 2px;
                     }
                     QPushButton:hover {
                         background-color: #c82333;
+                    }
+                    QPushButton:pressed {
+                        background-color: #bd2130;
                     }
                 """)
                 d.clicked.connect(lambda _,em=em,wid=worker.get('id',''): 
                                  self.delete_worker(em, worker_id=wid))
                 
-                hl.addWidget(e)
+                actions.setMinimumHeight(ROW_HEIGHT)
+                actions.setMaximumHeight(ROW_HEIGHT)
+                hl.addWidget(btn)
                 hl.addWidget(d)
                 self.workers_table.setCellWidget(i,5,actions)
+                self.workers_table.setRowHeight(i, ROW_HEIGHT)
 
             self.workers_table.resizeColumnsToContents()
             self.tabs.setCurrentIndex(0)
@@ -1997,23 +2033,30 @@ class WorkplaceTab(QWidget):
                 # Fix action buttons
                 action_widget = QWidget()
                 action_layout = QHBoxLayout(action_widget)
-                action_layout.setContentsMargins(5, 2, 5, 2)
-                action_layout.setSpacing(5)
+                action_layout.setContentsMargins(0, 0, 0, 0)
+                action_layout.setSpacing(8)
                 action_layout.setAlignment(Qt.AlignCenter)
-                
+                ROW_HEIGHT = 36
                 btn = QPushButton("Edit")
-                btn.setFixedWidth(80)
+                btn.setFixedWidth(70)
+                btn.setMinimumHeight(28)
+                btn.setMaximumHeight(28)
                 btn.setStyleSheet("""
                     QPushButton {
                         background-color: #ffc107;
                         color: #212529;
                         border: none;
-                        padding: 5px 10px;
-                        border-radius: 3px;
+                        padding: 6px 10px;
+                        border-radius: 4px;
                         font-weight: bold;
+                        min-height: 24px;
+                        margin: 2px;
                     }
                     QPushButton:hover {
                         background-color: #e0a800;
+                    }
+                    QPushButton:pressed {
+                        background-color: #d39e00;
                     }
                 """)
                 def make_cb(day, idx, row_idx, table):
@@ -2026,9 +2069,11 @@ class WorkplaceTab(QWidget):
                         dialog
                     )
                 btn.clicked.connect(make_cb(d, orig_idx, i, tbl))
+                action_widget.setMinimumHeight(ROW_HEIGHT)
+                action_widget.setMaximumHeight(ROW_HEIGHT)
                 action_layout.addWidget(btn)
-                
                 tbl.setCellWidget(i, 4, action_widget)
+                tbl.setRowHeight(i, ROW_HEIGHT)
             
             tbl.resizeColumnsToContents()
             tbl.setColumnWidth(4, 120)  # Force Actions column width
@@ -2081,11 +2126,13 @@ class WorkplaceTab(QWidget):
                 sorted_ws.append((em, 0))
         hrs_tbl.setRowCount(len(sorted_ws))
         for i, (em, h) in enumerate(sorted_ws):
-            name = em
+            name = ""
             for w in all_workers or []:
                 if w['email'] == em:
-                    name = f"{w['first_name']} {w['last_name']}"
+                    name = f"{w.get('first_name','')} {w.get('last_name','')}".strip()
                     break
+            if not name.strip():
+                name = em
             itm = QTableWidgetItem(name)
             hrs_tbl.setItem(i, 0, itm)
             
@@ -2149,6 +2196,8 @@ class WorkplaceTab(QWidget):
             btm.addWidget(save_fb)
         
         for b in (save, email, prnt, override_btn, close):
+            b.setMinimumHeight(32)
+            b.setMaximumHeight(32)
             btm.addWidget(b)
         L.addLayout(btm)
 
