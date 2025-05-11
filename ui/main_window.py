@@ -423,3 +423,31 @@ class MainWindow(QMainWindow):
             else:
                 QMessageBox.warning(self, "Sync Warning", 
                                 "No workers found in the current table.")
+
+    def show_log_dialog(self):
+        from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QPushButton, QHBoxLayout, QLabel
+        import os
+        log_path = os.path.join("logs", "firebase_test.log")
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Application Log")
+        dlg.setMinimumSize(800, 500)
+        L = QVBoxLayout(dlg)
+        title = QLabel("Application Log Output")
+        title.setStyleSheet("font-size: 16px; font-weight: bold; color: #343a40; margin-bottom: 10px;")
+        L.addWidget(title)
+        log_view = QTextEdit()
+        log_view.setReadOnly(True)
+        log_view.setStyleSheet("background-color: #212529; color: #e9ecef; font-family: monospace; font-size: 12px; border-radius: 6px; padding: 8px;")
+        if os.path.exists(log_path):
+            with open(log_path, "r", encoding="utf-8", errors="ignore") as f:
+                log_view.setPlainText(f.read())
+        else:
+            log_view.setPlainText("Log file not found: " + log_path)
+        L.addWidget(log_view)
+        btns = QHBoxLayout()
+        btns.addStretch()
+        close_btn = QPushButton("Close")
+        close_btn.clicked.connect(dlg.accept)
+        btns.addWidget(close_btn)
+        L.addLayout(btns)
+        dlg.exec_()

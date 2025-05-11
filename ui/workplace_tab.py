@@ -111,15 +111,31 @@ class WorkplaceTab(QWidget):
         btn_layout.setSpacing(10)
         
         upload_btn = StyleHelper.create_button("Upload Excel File", icon="icons/upload.png")
+        upload_btn.setMinimumHeight(48)
+        upload_btn.setMaximumHeight(48)
+        upload_btn.setMinimumWidth(200)
+        upload_btn.setMaximumWidth(200)
         upload_btn.clicked.connect(self.upload_excel)
         
         hours_btn = StyleHelper.create_button("Hours of Operation", icon="icons/clock.png")
+        hours_btn.setMinimumHeight(48)
+        hours_btn.setMaximumHeight(48)
+        hours_btn.setMinimumWidth(200)
+        hours_btn.setMaximumWidth(200)
         hours_btn.clicked.connect(self.manage_hours)
         
         generate_btn = StyleHelper.create_action_button("Generate Schedule", icon="icons/calendar.png")
+        generate_btn.setMinimumHeight(48)
+        generate_btn.setMaximumHeight(48)
+        generate_btn.setMinimumWidth(200)
+        generate_btn.setMaximumWidth(200)
         generate_btn.clicked.connect(self.generate_schedule)
         
         view_btn = StyleHelper.create_button("View Current Schedule", primary=False, icon="icons/view.png")
+        view_btn.setMinimumHeight(48)
+        view_btn.setMaximumHeight(48)
+        view_btn.setMinimumWidth(200)
+        view_btn.setMaximumWidth(200)
         view_btn.clicked.connect(self.view_current_schedule)
         
         last_btn = StyleHelper.create_button("Last Minute", primary=False)
@@ -140,6 +156,10 @@ class WorkplaceTab(QWidget):
                 background-color: #d26200;
             }
         """)
+        last_btn.setMinimumHeight(48)
+        last_btn.setMaximumHeight(48)
+        last_btn.setMinimumWidth(200)
+        last_btn.setMaximumWidth(200)
         last_btn.clicked.connect(self.show_last_minute_dialog)
 
         # Add Firebase sync button if Firebase is enabled
@@ -162,6 +182,10 @@ class WorkplaceTab(QWidget):
                     background-color: #117a8b;
                 }
             """)
+            sync_btn.setMinimumHeight(48)
+            sync_btn.setMaximumHeight(48)
+            sync_btn.setMinimumWidth(200)
+            sync_btn.setMaximumWidth(200)
             sync_btn.clicked.connect(self.sync_with_firebase)
             btn_layout.addWidget(sync_btn)
 
@@ -223,6 +247,12 @@ class WorkplaceTab(QWidget):
         self.workers_table.setHorizontalHeaderLabels([
             "First Name", "Last Name", "Email", "Work Study", "Availability", "Actions"
         ])
+        self.workers_table.horizontalHeader().setStretchLastSection(False)
+        self.workers_table.setColumnWidth(5, 120)
+        self.workers_table.horizontalHeader().setSectionResizeMode(5, QHeaderView.Fixed)
+        for i in range(5):
+            self.workers_table.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch)
+        self.workers_table.horizontalHeaderItem(5).setTextAlignment(Qt.AlignCenter)
         self.workers_table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.workers_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
         self.load_workers_table()
@@ -232,7 +262,11 @@ class WorkplaceTab(QWidget):
         btn_layout = QHBoxLayout()
         btn_layout.setSpacing(10)
         
-        add_btn = StyleHelper.create_button("Add Worker", icon="icons/add-user.png")
+        add_btn = StyleHelper.create_button("Add Worker", primary=False, icon="icons/add-user.png")
+        add_btn.setMinimumHeight(32)
+        add_btn.setMaximumHeight(32)
+        add_btn.setMinimumWidth(180)
+        add_btn.setMaximumWidth(180)
         add_btn.clicked.connect(self.add_worker_dialog)
         
         remove_btn = StyleHelper.create_button("Remove All Workers", primary=False)
@@ -253,6 +287,10 @@ class WorkplaceTab(QWidget):
                 background-color: #bd2130;
             }
         """)
+        remove_btn.setMinimumHeight(32)
+        remove_btn.setMaximumHeight(32)
+        remove_btn.setMinimumWidth(180)
+        remove_btn.setMaximumWidth(180)
         remove_btn.clicked.connect(self.remove_all_workers)
         
         # If Firebase enabled, add Export to Firebase button
@@ -275,6 +313,10 @@ class WorkplaceTab(QWidget):
                     background-color: #1e7e34;
                 }
             """)
+            export_btn.setMinimumHeight(32)
+            export_btn.setMaximumHeight(32)
+            export_btn.setMinimumWidth(180)
+            export_btn.setMaximumWidth(180)
             export_btn.clicked.connect(self.export_workers_to_firebase)
             btn_layout.addWidget(export_btn)
             
@@ -296,6 +338,10 @@ class WorkplaceTab(QWidget):
                     background-color: #117a8b;
                 }
             """)
+            import_btn.setMinimumHeight(32)
+            import_btn.setMaximumHeight(32)
+            import_btn.setMinimumWidth(180)
+            import_btn.setMaximumWidth(180)
             import_btn.clicked.connect(self.import_workers_from_firebase)
             btn_layout.addWidget(import_btn)
         
@@ -407,20 +453,22 @@ class WorkplaceTab(QWidget):
                 hl.setContentsMargins(0, 0, 0, 0)
                 hl.setSpacing(8)
                 hl.setAlignment(Qt.AlignCenter)
-                ROW_HEIGHT = 36
+                actions.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                ROW_HEIGHT = 28
                 btn = QPushButton("Edit")
                 btn.setFixedWidth(70)
-                btn.setMinimumHeight(28)
-                btn.setMaximumHeight(28)
+                btn.setMinimumHeight(22)
+                btn.setMaximumHeight(22)
                 btn.setStyleSheet("""
                     QPushButton {
                         background-color: #ffc107;
                         color: #212529;
                         border: none;
-                        padding: 6px 10px;
+                        font-size: 12px;
+                        padding: 2px 8px;
                         border-radius: 4px;
                         font-weight: bold;
-                        min-height: 24px;
+                        min-height: 18px;
                         margin: 2px;
                     }
                     QPushButton:hover {
@@ -434,17 +482,18 @@ class WorkplaceTab(QWidget):
                 
                 d = QPushButton("Delete")
                 d.setFixedWidth(70)
-                d.setMinimumHeight(28)
-                d.setMaximumHeight(28)
+                d.setMinimumHeight(22)
+                d.setMaximumHeight(22)
                 d.setStyleSheet("""
                     QPushButton {
                         background-color: #dc3545;
                         color: white;
                         border: none;
-                        padding: 6px 10px;
+                        font-size: 12px;
+                        padding: 2px 8px;
                         border-radius: 4px;
                         font-weight: bold;
-                        min-height: 24px;
+                        min-height: 18px;
                         margin: 2px;
                     }
                     QPushButton:hover {
@@ -504,20 +553,22 @@ class WorkplaceTab(QWidget):
                 hl.setContentsMargins(0, 0, 0, 0)
                 hl.setSpacing(8)
                 hl.setAlignment(Qt.AlignCenter)
-                ROW_HEIGHT = 36
+                actions.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+                ROW_HEIGHT = 28
                 btn = QPushButton("Edit")
                 btn.setFixedWidth(70)
-                btn.setMinimumHeight(28)
-                btn.setMaximumHeight(28)
+                btn.setMinimumHeight(22)
+                btn.setMaximumHeight(22)
                 btn.setStyleSheet("""
                     QPushButton {
                         background-color: #ffc107;
                         color: #212529;
                         border: none;
-                        padding: 6px 10px;
+                        font-size: 12px;
+                        padding: 2px 8px;
                         border-radius: 4px;
                         font-weight: bold;
-                        min-height: 24px;
+                        min-height: 18px;
                         margin: 2px;
                     }
                     QPushButton:hover {
@@ -532,17 +583,18 @@ class WorkplaceTab(QWidget):
                 
                 d = QPushButton("Delete")
                 d.setFixedWidth(70)
-                d.setMinimumHeight(28)
-                d.setMaximumHeight(28)
+                d.setMinimumHeight(22)
+                d.setMaximumHeight(22)
                 d.setStyleSheet("""
                     QPushButton {
                         background-color: #dc3545;
                         color: white;
                         border: none;
-                        padding: 6px 10px;
+                        font-size: 12px;
+                        padding: 2px 8px;
                         border-radius: 4px;
                         font-weight: bold;
-                        min-height: 24px;
+                        min-height: 18px;
                         margin: 2px;
                     }
                     QPushButton:hover {
@@ -1743,6 +1795,25 @@ class WorkplaceTab(QWidget):
         """)
         form.addRow("Max Workers Per Shift:", max_workers)
         
+        min_hours = QSpinBox()
+        min_hours.setRange(0, 40)
+        min_hours.setValue(3)
+        min_hours.setStyleSheet("""
+            QSpinBox {
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                padding: 8px;
+                background-color: white;
+                min-width: 100px;
+            }
+            QSpinBox:focus {
+                border-color: #80bdff;
+                outline: 0;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+        """)
+        form.addRow("Min Hours Per Worker:", min_hours)
+        
         # Add a note about work study students
         note = QLabel("Note: Work study students will always be assigned exactly 5 hours per week.")
         note.setStyleSheet("color: #6c757d; font-style: italic;")
@@ -1761,12 +1832,12 @@ class WorkplaceTab(QWidget):
         L.addLayout(btns)
 
         gen_btn.clicked.connect(lambda: self.do_generate_schedule(
-            dialog, max_hours.value(), max_workers.value(), hours_op
+            dialog, max_hours.value(), max_workers.value(), min_hours.value(), hours_op
         ))
         cancel.clicked.connect(dialog.reject)
         dialog.exec_()
 
-    def do_generate_schedule(self, dialog, max_hours_per_worker, max_workers_per_shift, hours_op=None):
+    def do_generate_schedule(self, dialog, max_hours_per_worker, max_workers_per_shift, min_hours_per_worker, hours_op=None):
         try:
             # Initialize progress dialog
             progress = QProgressDialog("Generating schedule...", "Cancel", 0, 100, self)
@@ -1825,12 +1896,13 @@ class WorkplaceTab(QWidget):
             progress.setValue(50)
             
             # Generate schedule
-            schedule, assigned_hours, low_hours, unassigned, alt_sols, unfilled, ws_issues = \
+            schedule, assigned_hours, low_hours, unassigned, alt_sols, unfilled, ws_issues, min_hours_issues = \
                 create_shifts_from_availability(
                     hours_op, workers,
                     self.workplace,
                     max_hours_per_worker,
-                    max_workers_per_shift
+                    max_workers_per_shift,
+                    min_hours_per_worker
                 )
             
             progress.setValue(80)
@@ -2036,7 +2108,7 @@ class WorkplaceTab(QWidget):
                 action_layout.setContentsMargins(0, 0, 0, 0)
                 action_layout.setSpacing(8)
                 action_layout.setAlignment(Qt.AlignCenter)
-                ROW_HEIGHT = 36
+                ROW_HEIGHT = 32
                 btn = QPushButton("Edit")
                 btn.setFixedWidth(70)
                 btn.setMinimumHeight(28)

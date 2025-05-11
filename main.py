@@ -24,6 +24,10 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+if os.name == 'nt':
+    import ctypes
+    ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+
 class FullscreenMainWindow(MainWindow):
     """Extended MainWindow that opens in fullscreen with exit button"""
     def __init__(self):

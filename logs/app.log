@@ -455,3 +455,550 @@
 2025-05-10 15:59:17,035 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
 2025-05-10 15:59:17,179 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
 2025-05-10 15:59:38,613 - core.firebase_manager - INFO - Saved schedule with ID 9lHTELRk5FlxUfhfMGNk for esports_lounge
+2025-05-10 16:02:49,626 - core.firebase_manager - INFO - Removing 19 workers from esports_lounge in 1 batches
+2025-05-10 16:02:49,768 - core.firebase_manager - INFO - Deleted batch of 19 workers
+2025-05-10 16:02:50,270 - core.firebase_manager - INFO - Successfully removed 19 workers from esports_lounge
+2025-05-10 16:02:52,201 - core.firebase_utils - INFO - Created workers collection for workplace: esports_lounge
+2025-05-10 16:02:52,201 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:02:52,426 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 16:02:52,825 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:02:53,061 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:02:53,181 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:02:53,978 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:02:54,208 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:02:54,334 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:02:54,931 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:02:55,155 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:02:55,277 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:02:55,708 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:02:55,925 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 16:02:56,031 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:04:00,986 - core.config - INFO - Firebase initialized successfully
+2025-05-10 16:04:00,987 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-10 16:04:00,987 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-10 16:04:02,033 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:02,246 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 16:04:02,366 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:04:02,755 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:03,144 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:04:03,350 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:04:03,483 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:04:03,880 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:04:04,257 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:04:04,463 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:04:04,561 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:04:04,976 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:04:07,892 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:04:08,159 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:04:08,246 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:04:08,527 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:04:08,722 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:04:08,817 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:04:09,689 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:04:09,865 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:04:09,969 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:04:10,549 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:10,759 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 16:04:10,954 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:04:33,002 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:33,226 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 16:04:35,542 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:35,739 - core.firebase_manager - INFO - Added worker with ID LMWgAsgFVBIbVE783Vue to esports_lounge
+2025-05-10 16:04:36,009 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:36,204 - core.firebase_manager - INFO - Added worker with ID nP5nWg7c59ALdnLxDJPQ to esports_lounge
+2025-05-10 16:04:36,503 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:36,688 - core.firebase_manager - INFO - Added worker with ID ch9v1wtsJGB2zozZxH5X to esports_lounge
+2025-05-10 16:04:36,951 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:37,146 - core.firebase_manager - INFO - Added worker with ID NQYVE4ri4h1GA148mAdW to esports_lounge
+2025-05-10 16:04:37,439 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:37,695 - core.firebase_manager - INFO - Added worker with ID AhGJQxblT2RbdP43w1Xv to esports_lounge
+2025-05-10 16:04:37,952 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:38,141 - core.firebase_manager - INFO - Added worker with ID UHhEhHHOptW7kpaLVKIB to esports_lounge
+2025-05-10 16:04:38,386 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:38,565 - core.firebase_manager - INFO - Added worker with ID 6RDgaeQxS5DHOIfM0XDm to esports_lounge
+2025-05-10 16:04:38,829 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:39,053 - core.firebase_manager - INFO - Added worker with ID fXoHySSnZQEvGJvv8ObR to esports_lounge
+2025-05-10 16:04:39,323 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:39,570 - core.firebase_manager - INFO - Added worker with ID VVfSDpSFtBoEB90Vsrrv to esports_lounge
+2025-05-10 16:04:39,856 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:40,048 - core.firebase_manager - INFO - Added worker with ID ZLc93YSahhHDozYFNk7G to esports_lounge
+2025-05-10 16:04:40,329 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:40,528 - core.firebase_manager - INFO - Added worker with ID 1BQOjpd1ompdfrpu96sN to esports_lounge
+2025-05-10 16:04:40,811 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:41,040 - core.firebase_manager - INFO - Added worker with ID tyXw0Bf2NA7CHSwsRCVG to esports_lounge
+2025-05-10 16:04:41,322 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:41,526 - core.firebase_manager - INFO - Added worker with ID iZlGbjlH5Yxy7Q9044RL to esports_lounge
+2025-05-10 16:04:41,845 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:42,048 - core.firebase_manager - INFO - Added worker with ID jDUgHh2nKDvAqqNSWDzN to esports_lounge
+2025-05-10 16:04:42,375 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:42,591 - core.firebase_manager - INFO - Added worker with ID TuKE75imazsMAUZK0vNu to esports_lounge
+2025-05-10 16:04:42,861 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:43,063 - core.firebase_manager - INFO - Added worker with ID P4ut92DeD5mJRJz0hTOl to esports_lounge
+2025-05-10 16:04:43,373 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:43,591 - core.firebase_manager - INFO - Added worker with ID 8yc8UhCZw6fiZMDKeQUA to esports_lounge
+2025-05-10 16:04:43,844 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:44,041 - core.firebase_manager - INFO - Added worker with ID zW4FVPTaCv5lD9TRu6zx to esports_lounge
+2025-05-10 16:04:45,402 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:04:45,608 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:04:58,797 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:04:59,016 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:04:59,115 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:04:59,769 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:04:59,949 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:05:00,030 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:05:00,749 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:05:00,983 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:05:01,092 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:06:26,529 - core.firebase_manager - INFO - Retrieved 1 schedules for esports_lounge
+2025-05-10 16:06:26,820 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:06:27,034 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:07:55,399 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:07:55,641 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:10:38,383 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 16:10:38,618 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 16:10:38,759 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 16:10:39,178 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:10:39,426 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:10:39,537 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:10:40,622 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:10:40,876 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:10:41,005 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:11:02,357 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 16:11:02,592 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 16:11:02,931 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 16:11:04,419 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:11:04,642 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 16:11:04,747 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 16:11:23,957 - core.firebase_manager - INFO - Removing 19 workers from esports_lounge in 1 batches
+2025-05-10 16:11:24,197 - core.firebase_manager - INFO - Deleted batch of 19 workers
+2025-05-10 16:11:24,801 - core.firebase_manager - INFO - Successfully removed 19 workers from esports_lounge
+2025-05-10 16:11:26,271 - core.firebase_utils - INFO - Created workers collection for workplace: esports_lounge
+2025-05-10 16:11:26,272 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 16:11:26,613 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 23:38:12,514 - core.firebase_manager - INFO - Retrieved 1 schedules for esports_lounge
+2025-05-10 23:38:12,859 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:38:13,117 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 23:45:50,958 - core.config - INFO - Firebase initialized successfully
+2025-05-10 23:45:50,958 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-10 23:45:50,958 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-10 23:45:52,714 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:45:52,951 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 23:45:53,091 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:45:53,423 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:45:53,770 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:45:53,995 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 23:45:54,127 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 23:45:54,471 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:45:54,768 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:45:55,006 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 23:45:55,127 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 23:45:55,443 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:46:13,746 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:13,971 - core.firebase_manager - INFO - Retrieved 1 workers for esports_lounge
+2025-05-10 23:46:16,853 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:17,106 - core.firebase_manager - INFO - Added worker with ID BQlRI4t53uwJeQiS986j to esports_lounge
+2025-05-10 23:46:17,460 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:17,714 - core.firebase_manager - INFO - Added worker with ID xoB9UdHExX8fQcybPI7u to esports_lounge
+2025-05-10 23:46:18,020 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:18,311 - core.firebase_manager - INFO - Added worker with ID yyrhqLnhkRqVK4wx0Djj to esports_lounge
+2025-05-10 23:46:18,681 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:18,906 - core.firebase_manager - INFO - Added worker with ID hTH5ZLP4ZxIQsYfeAf9q to esports_lounge
+2025-05-10 23:46:19,207 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:19,438 - core.firebase_manager - INFO - Added worker with ID PxWG2Bnkb4wtC03EjVHr to esports_lounge
+2025-05-10 23:46:19,753 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:19,972 - core.firebase_manager - INFO - Added worker with ID lRkAeOPdxblmCOJY1Ga1 to esports_lounge
+2025-05-10 23:46:20,278 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:20,531 - core.firebase_manager - INFO - Added worker with ID wuraEHPUgHenUnxLvH11 to esports_lounge
+2025-05-10 23:46:20,816 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:21,059 - core.firebase_manager - INFO - Added worker with ID lBEEA952DgXOsuxTpbHi to esports_lounge
+2025-05-10 23:46:21,381 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:21,611 - core.firebase_manager - INFO - Added worker with ID oFapuVgoMGT6rHQ6ZT0w to esports_lounge
+2025-05-10 23:46:21,929 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:22,157 - core.firebase_manager - INFO - Added worker with ID 40RwNXHrr6ifvpK1pcU0 to esports_lounge
+2025-05-10 23:46:22,468 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:22,697 - core.firebase_manager - INFO - Added worker with ID 5HoX6nmOxqgUW1MmGP2D to esports_lounge
+2025-05-10 23:46:22,996 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:23,233 - core.firebase_manager - INFO - Added worker with ID 5rdwYs9Zoh4DDRaNF7BB to esports_lounge
+2025-05-10 23:46:23,498 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:23,673 - core.firebase_manager - INFO - Added worker with ID vbAyL2JNHO6zYkAak851 to esports_lounge
+2025-05-10 23:46:23,934 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:24,113 - core.firebase_manager - INFO - Added worker with ID RaPHuYdkRCAjKSHXezHw to esports_lounge
+2025-05-10 23:46:24,322 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:24,466 - core.firebase_manager - INFO - Added worker with ID z4BTdkm1VN17G5rsl9hV to esports_lounge
+2025-05-10 23:46:24,682 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:24,870 - core.firebase_manager - INFO - Added worker with ID vCjdf79sSdO92vI6vBRV to esports_lounge
+2025-05-10 23:46:25,095 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:25,265 - core.firebase_manager - INFO - Added worker with ID blGotcEI1m6MdtCDxEMZ to esports_lounge
+2025-05-10 23:46:25,465 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:25,629 - core.firebase_manager - INFO - Added worker with ID 6a3RSO41dbL29w7pOrFq to esports_lounge
+2025-05-10 23:46:27,244 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:27,461 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:46:41,120 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:41,291 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:46:47,377 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:46:47,530 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:47:42,846 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:47:43,112 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:47:43,382 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:47:49,031 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:47:49,208 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:47:49,209 - core.scheduler - WARNING - Skipping work study shift for Weekend Test on Tuesday 14:00-17:00 due to max_workers_per_shift limit.
+2025-05-10 23:47:49,209 - core.scheduler - WARNING - Skipping work study shift for Weekend Test on Tuesday 17:00-19:00 due to max_workers_per_shift limit.
+2025-05-10 23:47:49,210 - core.scheduler - WARNING - Work-study Weekend Test only got 0.0h out of 5h
+2025-05-10 23:48:24,545 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:24,722 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:24,956 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:25,195 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:25,453 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:25,757 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:25,988 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:26,207 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:26,467 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:26,685 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:26,931 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:27,164 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:27,380 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:27,601 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:27,865 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:28,033 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:28,346 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:28,562 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:28,878 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:29,134 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:29,424 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:29,901 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:30,182 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:30,485 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:30,732 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:31,024 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:31,236 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:31,397 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:31,909 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:32,080 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:32,293 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:32,496 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:32,691 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:32,844 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:33,059 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:33,272 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:33,467 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:33,627 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:43,644 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:43,801 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:44,014 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:44,205 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:44,402 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:44,558 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:44,812 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:45,020 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:45,202 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:45,396 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:45,607 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:45,772 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:45,973 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:46,162 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:46,353 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:46,511 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:46,727 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:46,901 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:47,111 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:47,278 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:47,497 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:47,683 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:47,923 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:48,103 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:48,294 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:48,496 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:48,680 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:48,858 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:49,057 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:49,230 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:49,425 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:49,608 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:49,811 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:49,971 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:50,195 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:50,400 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:48:50,586 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:48:50,771 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:54:37,007 - core.config - INFO - Firebase initialized successfully
+2025-05-10 23:54:37,007 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-10 23:54:37,008 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-10 23:54:38,113 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:54:38,352 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:54:38,501 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:54:38,862 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:54:39,204 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:54:39,441 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 23:54:39,580 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 23:54:39,970 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:54:40,278 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:54:40,517 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 23:54:40,632 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 23:54:41,015 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:54:43,359 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:54:43,587 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:54:43,679 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:58:40,280 - core.config - INFO - Firebase initialized successfully
+2025-05-10 23:58:40,280 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-10 23:58:40,281 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-10 23:58:41,320 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:58:41,567 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:58:41,821 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:58:42,180 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:58:42,520 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:58:42,738 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-10 23:58:42,861 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-10 23:58:43,306 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-10 23:58:43,602 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:58:43,849 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 23:58:43,960 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-10 23:58:44,268 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:58:46,270 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:58:46,494 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:58:46,574 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-10 23:58:54,114 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-10 23:58:54,329 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-10 23:58:54,330 - core.scheduler - WARNING - Skipping work study shift for Weekend Test on Tuesday 14:00-17:00 due to max_workers_per_shift limit.
+2025-05-10 23:58:54,330 - core.scheduler - WARNING - Skipping work study shift for Weekend Test on Tuesday 17:00-19:00 due to max_workers_per_shift limit.
+2025-05-10 23:58:54,331 - core.scheduler - WARNING - Work-study Weekend Test only got 0.0h out of 5h
+2025-05-10 23:59:27,837 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-10 23:59:28,052 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-10 23:59:28,185 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:01:17,365 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:17,611 - core.firebase_manager - INFO - Retrieved 1 workers for it_service_center
+2025-05-11 00:01:19,499 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:19,790 - core.firebase_manager - INFO - Added worker with ID 4xSk8pkUcjuidyKNkkDl to it_service_center
+2025-05-11 00:01:20,122 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:20,364 - core.firebase_manager - INFO - Added worker with ID Luy2bXPHrpJjyaYjrbJ7 to it_service_center
+2025-05-11 00:01:20,731 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:20,967 - core.firebase_manager - INFO - Added worker with ID vo0FQPZf6MGjZLCm9Nu6 to it_service_center
+2025-05-11 00:01:21,358 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:21,594 - core.firebase_manager - INFO - Added worker with ID xQ8zAkr6WfIeNEkqCcvl to it_service_center
+2025-05-11 00:01:21,909 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:22,148 - core.firebase_manager - INFO - Added worker with ID p6ka0ERONjjJpxFsJ4ce to it_service_center
+2025-05-11 00:01:22,600 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:22,831 - core.firebase_manager - INFO - Added worker with ID 46113K8wkKac7WDJFmUI to it_service_center
+2025-05-11 00:01:23,151 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:23,390 - core.firebase_manager - INFO - Added worker with ID BACQrpSuRJdJBtbeJdmZ to it_service_center
+2025-05-11 00:01:23,718 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:23,956 - core.firebase_manager - INFO - Added worker with ID Ilz75nUxnalaa6MxBGUr to it_service_center
+2025-05-11 00:01:24,303 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:24,538 - core.firebase_manager - INFO - Added worker with ID VYzCoiB7qLV66XCIOMky to it_service_center
+2025-05-11 00:01:26,260 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:26,505 - core.firebase_manager - INFO - Added worker with ID YUD5HaipYjPsl4sPSYzE to it_service_center
+2025-05-11 00:01:26,824 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:27,065 - core.firebase_manager - INFO - Added worker with ID AAuDEL1SXX7qUTSVN66v to it_service_center
+2025-05-11 00:01:27,384 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:27,711 - core.firebase_manager - INFO - Added worker with ID HtEOi6S3lgEFpIugRunn to it_service_center
+2025-05-11 00:01:28,024 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:28,372 - core.firebase_manager - INFO - Added worker with ID K2pR9JWsBQ5Z4jMGZYJB to it_service_center
+2025-05-11 00:01:28,689 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:29,026 - core.firebase_manager - INFO - Added worker with ID RQVE878Pgg0Ty8l4AIkq to it_service_center
+2025-05-11 00:01:29,377 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:29,953 - core.firebase_manager - INFO - Added worker with ID yqXOyTclAlR76GjcjATR to it_service_center
+2025-05-11 00:01:30,296 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:30,538 - core.firebase_manager - INFO - Added worker with ID NrHIg8cvS00PkltyeYjk to it_service_center
+2025-05-11 00:01:30,937 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:31,183 - core.firebase_manager - INFO - Added worker with ID Yn6I6LARueVlvSqsR4U5 to it_service_center
+2025-05-11 00:01:31,513 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:31,708 - core.firebase_manager - INFO - Added worker with ID jx6WmAr7gGP55borUIak to it_service_center
+2025-05-11 00:01:31,946 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:32,139 - core.firebase_manager - INFO - Added worker with ID 1XIUT7p8hFF9ewQXIVo4 to it_service_center
+2025-05-11 00:01:32,361 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:32,543 - core.firebase_manager - INFO - Added worker with ID nCOuu3xEkq6MdA3gVBS7 to it_service_center
+2025-05-11 00:01:32,768 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:32,947 - core.firebase_manager - INFO - Added worker with ID 68OXS1xbIdTy6g5mTPUV to it_service_center
+2025-05-11 00:01:33,198 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:33,508 - core.firebase_manager - INFO - Added worker with ID Ftm2fEjNYCUzzriUUfkD to it_service_center
+2025-05-11 00:01:33,744 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:33,948 - core.firebase_manager - INFO - Added worker with ID tERUEsrnhAw4RVvaWZPZ to it_service_center
+2025-05-11 00:01:34,229 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:34,424 - core.firebase_manager - INFO - Added worker with ID yeYKX5Ee4ojlBSpenS9t to it_service_center
+2025-05-11 00:01:36,063 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:36,279 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:01:41,554 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:41,814 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:01:41,901 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:01:53,348 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:01:53,590 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:01:53,591 - core.scheduler - WARNING - Skipping work study shift for Rick Kemper on Thursday 09:00-12:00 due to max_workers_per_shift limit.
+2025-05-11 00:01:53,592 - core.scheduler - WARNING - Skipping work study shift for Rick Kemper on Thursday 12:00-14:00 due to max_workers_per_shift limit.
+2025-05-11 00:01:53,593 - core.scheduler - WARNING - Work-study Rick Kemper only got 0.0h out of 5h
+2025-05-11 00:10:03,428 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:10:03,429 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:10:03,429 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:10:04,433 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:10:04,675 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:10:04,822 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:10:05,380 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:10:05,763 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:10:06,195 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:10:06,286 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:10:06,630 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:10:06,957 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:10:07,191 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:10:07,317 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:10:07,659 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:10:10,645 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:10:10,896 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:10:10,996 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:13:17,588 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:13:17,589 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:13:17,589 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:13:18,671 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:13:18,923 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:13:19,082 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:13:19,450 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:13:19,787 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:13:20,030 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:13:20,150 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:13:20,485 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:13:20,862 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:13:21,105 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:13:21,240 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:13:21,668 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:13:24,798 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:13:25,028 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:13:25,170 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:13:26,999 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:13:27,219 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:13:27,342 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:13:28,715 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:13:28,931 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:13:29,044 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:16:09,571 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:16:09,571 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:16:09,571 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:16:10,645 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:16:10,882 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:16:11,023 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:16:11,425 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:16:11,766 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:16:11,984 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:16:12,114 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:16:12,452 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:16:12,805 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:16:13,043 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:16:13,170 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:16:13,560 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:16:19,523 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:16:19,752 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:16:19,879 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:19:20,880 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:19:20,880 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:19:20,881 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:19:21,928 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:19:22,177 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:19:22,375 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:19:22,737 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:19:23,116 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:19:23,343 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:19:23,447 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:19:24,034 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:19:24,353 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:19:24,598 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:19:24,731 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:19:25,070 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:23:41,408 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:23:41,408 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:23:41,409 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:23:42,480 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:23:42,735 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:23:42,911 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:23:43,269 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:23:43,613 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:23:43,843 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:23:43,980 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:23:44,696 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:23:45,028 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:23:45,273 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:23:45,428 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:23:45,788 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:26:16,089 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:26:16,089 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:26:16,090 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:26:17,192 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:26:17,432 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:26:17,580 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:26:17,919 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:26:18,234 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:26:18,452 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:26:18,567 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:26:18,908 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:26:19,234 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:26:19,453 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:26:19,623 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:26:19,942 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:26:24,358 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:26:24,682 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:26:24,682 - ui.last_minute_availability_dialog - INFO - Loaded 19 workers from Firebase for esports_lounge
+2025-05-11 00:32:06,194 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:32:06,194 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:32:06,195 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:32:07,201 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:32:07,448 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:32:07,591 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:32:07,940 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:32:08,270 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:32:08,508 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:32:08,605 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:32:08,947 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:32:09,285 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:32:09,520 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:32:09,654 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:32:10,007 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:35:33,801 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:35:33,802 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:35:33,802 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:35:34,906 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:35:35,130 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:35:35,275 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:35:35,593 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:35:35,873 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:35:36,063 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:35:36,171 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:35:36,565 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:35:36,837 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:35:37,064 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:35:37,223 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:35:37,581 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:40:23,983 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:40:23,984 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:40:23,984 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:40:25,298 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:40:25,592 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:40:25,778 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:40:26,242 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:40:26,585 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:40:26,834 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:40:26,987 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:40:27,594 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:40:27,902 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:40:28,219 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:40:28,351 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:40:28,639 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:44:52,332 - core.config - INFO - Firebase initialized successfully
+2025-05-11 00:44:52,333 - __main__ - INFO - Firebase initialized successfully at startup
+2025-05-11 00:44:52,334 - core.firebase_manager - INFO - Using existing Firebase app
+2025-05-11 00:44:53,536 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:44:53,793 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:44:53,940 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure
+2025-05-11 00:44:54,292 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:44:54,635 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:44:54,865 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:44:54,980 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:44:55,345 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:44:55,676 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:44:56,009 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:44:56,180 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:44:56,555 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:45:04,189 - core.firebase_manager - INFO - Current workplace set to: esports_arena
+2025-05-11 00:45:04,412 - core.firebase_manager - INFO - Retrieved 1 workers for esports_arena
+2025-05-11 00:45:04,543 - core.firebase_manager - INFO - Retrieved hours of operation for esports_arena from nested structure
+2025-05-11 00:45:05,235 - core.firebase_manager - INFO - Current workplace set to: it_service_center
+2025-05-11 00:45:05,486 - core.firebase_manager - INFO - Retrieved 25 workers for it_service_center
+2025-05-11 00:45:05,601 - core.firebase_manager - INFO - Retrieved hours of operation for it_service_center from nested structure
+2025-05-11 00:45:07,095 - core.firebase_manager - INFO - Current workplace set to: esports_lounge
+2025-05-11 00:45:07,526 - core.firebase_manager - INFO - Retrieved 19 workers for esports_lounge
+2025-05-11 00:45:07,646 - core.firebase_manager - INFO - Retrieved hours of operation for esports_lounge from nested structure

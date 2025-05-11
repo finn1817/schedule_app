@@ -170,7 +170,7 @@ def recently_scheduled(worker_email, day, shift_start, schedule, buffer_hours=0.
     return False
 
 def create_shifts_from_availability(hours_of_operation=None, workers=None, workplace_id=None, 
-                                    max_hours_per_worker=20.0, max_workers_per_shift=2):
+                                    max_hours_per_worker=20.0, max_workers_per_shift=2, min_hours_per_worker=3):
     """
     Create shifts from worker availability and hours of operation.
     
@@ -184,6 +184,7 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         workplace_id: Workplace ID (to fetch data if not provided directly)
         max_hours_per_worker: Maximum hours per worker (default: 20.0)
         max_workers_per_shift: Maximum workers per shift (default: 2)
+        min_hours_per_worker: Minimum hours for non-work-study workers (default: 3)
     
     Returns:
       schedule: dict[day, list of shift dicts],
@@ -192,7 +193,8 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
       unassigned: list[str],
       alt_sols: dict[key→list[str]],
       unfilled_shifts: list[shift dict],
-      ws_issues: list[str]
+      ws_issues: list[str],
+      min_hours_issues: list[str]
     """
     # Determine how the function was called and get data accordingly
     if workplace_id and (hours_of_operation is None or workers is None):
@@ -203,11 +205,11 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
     # Validate data
     if not hours_of_operation:
         logger.warning(f"No hours of operation provided")
-        return {}, {}, [], [], {}, [], []
+        return {}, {}, [], [], {}, [], [], []
         
     if not workers:
         logger.warning(f"No workers provided")
-        return {}, {}, [], [], {}, [], []
+        return {}, {}, [], [], {}, [], [], []
     
     random.seed(datetime.now().timestamp())
 
@@ -268,18 +270,28 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         
         # Apply the optimal shifts
         for day, start, end, duration in optimal_shifts:
-            schedule.setdefault(day, []).append({
-                "start": hour_to_time_str(start),
-                "end": hour_to_time_str(end),
-                "assigned": [f"{w['first_name']} {w['last_name']}"],
-                "available": [f"{w['first_name']} {w['last_name']}"],
-                "raw_assigned": [em],
-                "all_available": [w],
-                "is_work_study": True
-            })
-            
-            assigned_hours[em] += duration
-            remaining -= duration
+            # Enforce max_workers_per_shift
+            slot_start = hour_to_time_str(start)
+            slot_end = hour_to_time_str(end)
+            existing_shifts = [
+                s for s in schedule.get(day, [])
+                if s['start'] == slot_start and s['end'] == slot_end
+            ]
+            if len(existing_shifts) < max_workers_per_shift:
+                schedule.setdefault(day, []).append({
+                    "start": slot_start,
+                    "end": slot_end,
+                    "assigned": [f"{w['first_name']} {w['last_name']}"],
+                    "available": [f"{w['first_name']} {w['last_name']}"],
+                    "raw_assigned": [em],
+                    "all_available": [w],
+                    "is_work_study": True
+                })
+                assigned_hours[em] += duration
+                remaining -= duration
+            else:
+                logger.warning(f"Skipping work study shift for {w['first_name']} {w['last_name']} on {day} {slot_start}-{slot_end} due to max_workers_per_shift limit.")
+                # Optionally, add to ws_issues or similar
 
         if remaining > 0:
             # mark issue--will show up in your ws_issues list
@@ -439,6 +451,13 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         and f"{w['first_name']} {w['last_name']}" not in [issue.split(':')[0] for issue in initial_ws_issues]
     ]
 
+    # New: collect workers below min_hours_per_worker (non-work-study only)
+    min_hours_issues = [
+        f"{w['first_name']} {w['last_name']}"
+        for w in workers
+        if not ws_status[w['email']] and assigned_hours[w['email']] < min_hours_per_worker
+    ]
+
     # alternative solutions for any unfilled
     alt_sols = {}
     for us in unfilled_shifts:
@@ -450,4 +469,4 @@ def create_shifts_from_availability(hours_of_operation=None, workers=None, workp
         if sols:
             alt_sols[key] = [f"{w['first_name']} {w['last_name']}" for w in sols]
 
-    return schedule, assigned_hours, low_hours, unassigned, alt_sols, unfilled_shifts, ws_issues
+    return schedule, assigned_hours, low_hours, unassigned, alt_sols, unfilled_shifts, ws_issues, min_hours_issues
