@@ -12,7 +12,7 @@ from PyQt5.QtWidgets import (
     QTableWidget, QTableWidgetItem, QFileDialog, QMessageBox,
     QTabWidget, QDialog, QFormLayout, QSpinBox, QComboBox,
     QLineEdit, QTextEdit, QHeaderView, QListWidget, QListWidgetItem,
-    QProgressDialog, QCheckBox, QFrame, QSizePolicy
+    QProgressDialog, QCheckBox, QFrame, QSizePolicy, QAbstractItemView
 )
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QColor, QFont
@@ -35,7 +35,6 @@ from .hours_of_operation_dialog import HoursOfOperationDialog
 from .alternative_solutions_dialog import AlternativeSolutionsDialog
 from .last_minute_availability_dialog import LastMinuteAvailabilityDialog
 from .shift_override_dialog import ShiftOverrideDialog
-
 
 class WorkplaceTab(QWidget):
     """Tab for managing a specific workplace."""
@@ -255,6 +254,12 @@ class WorkplaceTab(QWidget):
         self.workers_table.horizontalHeaderItem(5).setTextAlignment(Qt.AlignCenter)
         self.workers_table.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.workers_table.verticalHeader().setSectionResizeMode(QHeaderView.Fixed)
+        
+        # Enable row selection and connect selection change handler
+        self.workers_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.workers_table.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.workers_table.itemSelectionChanged.connect(self._handle_worker_selection_change)
+        
         self.load_workers_table()
         L.addWidget(self.workers_table)
 
@@ -405,6 +410,77 @@ class WorkplaceTab(QWidget):
 
         self.tabs.addTab(tab, "Hours of Operation")
 
+    def _create_worker_action_buttons(self, row_index, email, worker_id=None):
+        """Helper method to create consistent action buttons for worker rows"""
+        actions = QWidget()
+        hl = QHBoxLayout(actions)
+        hl.setContentsMargins(0, 0, 0, 0)
+        hl.setSpacing(8)
+        hl.setAlignment(Qt.AlignCenter)
+        actions.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        ROW_HEIGHT = 28
+        
+        # Edit button
+        edit_btn = QPushButton("Edit")
+        edit_btn.setFixedWidth(70)
+        edit_btn.setMinimumHeight(22)
+        edit_btn.setMaximumHeight(22)
+        edit_btn.setProperty('row', row_index)  # Store row index for selection handling
+        edit_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #ffc107;
+                color: #212529;
+                border: none;
+                font-size: 12px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-weight: bold;
+                min-height: 18px;
+                margin: 2px;
+            }
+            QPushButton:hover {
+                background-color: #e0a800;
+            }
+            QPushButton:pressed {
+                background-color: #d39e00;
+            }
+        """)
+        edit_btn.clicked.connect(lambda: self.edit_worker_dialog(row_index, email, worker_id=worker_id))
+        
+        # Delete button
+        delete_btn = QPushButton("Delete")
+        delete_btn.setFixedWidth(70)
+        delete_btn.setMinimumHeight(22)
+        delete_btn.setMaximumHeight(22)
+        delete_btn.setProperty('row', row_index)  # Store row index for selection handling
+        delete_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #dc3545;
+                color: white;
+                border: none;
+                font-size: 12px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-weight: bold;
+                min-height: 18px;
+                margin: 2px;
+            }
+            QPushButton:hover {
+                background-color: #c82333;
+            }
+            QPushButton:pressed {
+                background-color: #bd2130;
+            }
+        """)
+        delete_btn.clicked.connect(lambda: self.delete_worker(email, worker_id=worker_id))
+        
+        actions.setMinimumHeight(ROW_HEIGHT)
+        actions.setMaximumHeight(ROW_HEIGHT)
+        hl.addWidget(edit_btn)
+        hl.addWidget(delete_btn)
+        
+        return actions
+
     def load_workers_table(self):
         self.workers_table.setRowCount(0)
         
@@ -419,7 +495,6 @@ class WorkplaceTab(QWidget):
             except Exception as e:
                 logging.error(f"Error loading workers from Firebase: {e}")
                 # Fall back to local file
-                pass
         
         # If Firebase loading failed or is disabled, load from Excel file
         path = os.path.join(DIRS['workplaces'], f"{self.workplace}.xlsx")
@@ -447,70 +522,11 @@ class WorkplaceTab(QWidget):
                 self.workers_table.setItem(i,2,QTableWidgetItem(em))
                 self.workers_table.setItem(i,3,QTableWidgetItem(ws))
                 self.workers_table.setItem(i,4,QTableWidgetItem(at))
-
-                actions = QWidget()
-                hl = QHBoxLayout(actions)
-                hl.setContentsMargins(0, 0, 0, 0)
-                hl.setSpacing(8)
-                hl.setAlignment(Qt.AlignCenter)
-                actions.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-                ROW_HEIGHT = 28
-                btn = QPushButton("Edit")
-                btn.setFixedWidth(70)
-                btn.setMinimumHeight(22)
-                btn.setMaximumHeight(22)
-                btn.setStyleSheet("""
-                    QPushButton {
-                        background-color: #ffc107;
-                        color: #212529;
-                        border: none;
-                        font-size: 12px;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-weight: bold;
-                        min-height: 18px;
-                        margin: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #e0a800;
-                    }
-                    QPushButton:pressed {
-                        background-color: #d39e00;
-                    }
-                """)
-                btn.clicked.connect(lambda _,r=i,em=em: self.edit_worker_dialog(r,em))
                 
-                d = QPushButton("Delete")
-                d.setFixedWidth(70)
-                d.setMinimumHeight(22)
-                d.setMaximumHeight(22)
-                d.setStyleSheet("""
-                    QPushButton {
-                        background-color: #dc3545;
-                        color: white;
-                        border: none;
-                        font-size: 12px;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-weight: bold;
-                        min-height: 18px;
-                        margin: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #c82333;
-                    }
-                    QPushButton:pressed {
-                        background-color: #bd2130;
-                    }
-                """)
-                d.clicked.connect(lambda _,em=em: self.delete_worker(em))
-                
-                actions.setMinimumHeight(ROW_HEIGHT)
-                actions.setMaximumHeight(ROW_HEIGHT)
-                hl.addWidget(btn)
-                hl.addWidget(d)
+                # Use helper method for action buttons
+                actions = self._create_worker_action_buttons(i, em)
                 self.workers_table.setCellWidget(i,5,actions)
-                self.workers_table.setRowHeight(i, ROW_HEIGHT)
+                self.workers_table.setRowHeight(i, actions.minimumHeight())
 
             self.workers_table.resizeColumnsToContents()
             self.tabs.setCurrentIndex(0)
@@ -548,71 +564,10 @@ class WorkplaceTab(QWidget):
                 self.workers_table.setItem(i,3,QTableWidgetItem(ws))
                 self.workers_table.setItem(i,4,QTableWidgetItem(avail_str))
 
-                actions = QWidget()
-                hl = QHBoxLayout(actions)
-                hl.setContentsMargins(0, 0, 0, 0)
-                hl.setSpacing(8)
-                hl.setAlignment(Qt.AlignCenter)
-                actions.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-                ROW_HEIGHT = 28
-                btn = QPushButton("Edit")
-                btn.setFixedWidth(70)
-                btn.setMinimumHeight(22)
-                btn.setMaximumHeight(22)
-                btn.setStyleSheet("""
-                    QPushButton {
-                        background-color: #ffc107;
-                        color: #212529;
-                        border: none;
-                        font-size: 12px;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-weight: bold;
-                        min-height: 18px;
-                        margin: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #e0a800;
-                    }
-                    QPushButton:pressed {
-                        background-color: #d39e00;
-                    }
-                """)
-                btn.clicked.connect(lambda _,r=i,em=em,wid=worker.get('id',''): 
-                                 self.edit_worker_dialog(r, em, worker_id=wid))
-                
-                d = QPushButton("Delete")
-                d.setFixedWidth(70)
-                d.setMinimumHeight(22)
-                d.setMaximumHeight(22)
-                d.setStyleSheet("""
-                    QPushButton {
-                        background-color: #dc3545;
-                        color: white;
-                        border: none;
-                        font-size: 12px;
-                        padding: 2px 8px;
-                        border-radius: 4px;
-                        font-weight: bold;
-                        min-height: 18px;
-                        margin: 2px;
-                    }
-                    QPushButton:hover {
-                        background-color: #c82333;
-                    }
-                    QPushButton:pressed {
-                        background-color: #bd2130;
-                    }
-                """)
-                d.clicked.connect(lambda _,em=em,wid=worker.get('id',''): 
-                                 self.delete_worker(em, worker_id=wid))
-                
-                actions.setMinimumHeight(ROW_HEIGHT)
-                actions.setMaximumHeight(ROW_HEIGHT)
-                hl.addWidget(btn)
-                hl.addWidget(d)
+                # Use helper method for action buttons
+                actions = self._create_worker_action_buttons(i, em, worker_id=worker.get('id',''))
                 self.workers_table.setCellWidget(i,5,actions)
-                self.workers_table.setRowHeight(i, ROW_HEIGHT)
+                self.workers_table.setRowHeight(i, actions.minimumHeight())
 
             self.workers_table.resizeColumnsToContents()
             self.tabs.setCurrentIndex(0)
@@ -3158,3 +3113,101 @@ class WorkplaceTab(QWidget):
         except Exception as e:
             logging.error(f"Error syncing hours with Firebase: {e}")
             QMessageBox.critical(self, "Error", f"Error syncing hours with Firebase: {e}")
+
+    def _handle_worker_selection_change(self):
+        """Handle worker row selection change"""
+        # First, reset all buttons to default style
+        for row in range(self.workers_table.rowCount()):
+            if action_widget := self.workers_table.cellWidget(row, 5):
+                action_widget.setStyleSheet("")
+                for button in action_widget.findChildren(QPushButton):
+                    if "Edit" in button.text():
+                        button.setStyleSheet("""
+                            QPushButton {
+                                background-color: #ffc107;
+                                color: #212529;
+                                border: none;
+                                font-size: 12px;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                font-weight: bold;
+                            }
+                            QPushButton:hover {
+                                background-color: #e0a800;
+                            }
+                            QPushButton:pressed {
+                                background-color: #d39e00;
+                            }
+                        """)
+                    elif "Delete" in button.text():
+                        button.setStyleSheet("""
+                            QPushButton {
+                                background-color: #dc3545;
+                                color: white;
+                                border: none;
+                                font-size: 12px;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                font-weight: bold;
+                            }
+                            QPushButton:hover {
+                                background-color: #c82333;
+                            }
+                            QPushButton:pressed {
+                                background-color: #bd2130;
+                            }
+                        """)
+        
+        # Update selected row buttons
+        selected_items = self.workers_table.selectedItems()
+        if selected_items:
+            selected_row = selected_items[0].row()
+            if action_widget := self.workers_table.cellWidget(selected_row, 5):
+                # Set selected background for the action widget
+                action_widget.setStyleSheet("background-color: #007bff;")
+                # Update button styles for selected state
+                for button in action_widget.findChildren(QPushButton):
+                    if "Edit" in button.text():
+                        button.setStyleSheet("""
+                            QPushButton {
+                                background-color: #ffc107;
+                                color: #212529;
+                                border: none;
+                                font-size: 12px;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                font-weight: bold;
+                            }
+                            QPushButton:hover {
+                                background-color: #e0a800;
+                            }
+                            QPushButton:pressed {
+                                background-color: #d39e00;
+                            }
+                            QPushButton {
+                                background-color: #e0a800;
+                                border: 1px solid white;
+                            }
+                        """)
+                    elif "Delete" in button.text():
+                        button.setStyleSheet("""
+                            QPushButton {
+                                background-color: #dc3545;
+                                color: white;
+                                border: none;
+                                font-size: 12px;
+                                padding: 2px 8px;
+                                border-radius: 4px;
+                                font-weight: bold;
+                            }
+                            QPushButton:hover {
+                                background-color: #c82333;
+                            }
+                            QPushButton:pressed {
+                                background-color: #bd2130;
+                            }
+                            QPushButton {
+                                background-color: #c82333;
+                                border: 1px solid white;
+                            }
+                        """)
