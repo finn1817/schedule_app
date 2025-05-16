@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 from .config import DIRS, firebase_available, DAYS
+from .parser import time_to_hour
 from .firebase_manager import FirebaseManager
 
 logger = logging.getLogger(__name__)
@@ -495,17 +496,54 @@ class DataManager:
                     if rows:
                         pd.DataFrame(rows).to_excel(writer, sheet_name=day, index=False)
                 
-                # Create a full schedule sheet
+                # Create a full schedule sheet with ordered days and sorted times
                 all_rows = []
-                for day, shifts in schedule_data.items():
+                
+                # Define the correct day order (Sunday first)
+                correct_day_order = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                
+                # Process days in the correct order
+                for day in correct_day_order:
+                    shifts = schedule_data.get(day, [])
+                    if not shifts:
+                        continue
+                    
+                    day_rows = []
+                    
+                    # Process shifts for this day
                     for shift in shifts:
-                        from core.parser import format_time_ampm
-                        all_rows.append({
-                            "Day": day,
-                            "Start": format_time_ampm(shift['start']),
-                            "End": format_time_ampm(shift['end']),
-                            "Assigned": ", ".join(shift['assigned'])
-                        })
+                        from core.parser import format_time_ampm, time_to_hour
+                        start_hour = time_to_hour(shift['start'])
+                        
+                        # For each assigned worker, create a separate row
+                        if len(shift['assigned']) > 1 or (len(shift['assigned']) == 1 and shift['assigned'][0] != "Unfilled"):
+                            for worker in shift['assigned']:
+                                day_rows.append({
+                                    "Day": day,
+                                    "Start": format_time_ampm(shift['start']),
+                                    "End": format_time_ampm(shift['end']),
+                                    "Assigned": worker,
+                                    "_start_hour": start_hour  # For sorting, will be removed later
+                                })
+                        else:
+                            # Keep "Unfilled" slots as they are
+                            day_rows.append({
+                                "Day": day,
+                                "Start": format_time_ampm(shift['start']),
+                                "End": format_time_ampm(shift['end']),
+                                "Assigned": ", ".join(shift['assigned']),
+                                "_start_hour": start_hour  # For sorting, will be removed later
+                            })
+                    
+                    # Sort shifts for this day by start time
+                    day_rows.sort(key=lambda x: x["_start_hour"])
+                    
+                    # Remove the temporary sorting field
+                    for row in day_rows:
+                        del row["_start_hour"]
+                        
+                    # Add this day's rows to the full list
+                    all_rows.extend(day_rows)
                 
                 if all_rows:
                     pd.DataFrame(all_rows).to_excel(writer, sheet_name="Full Schedule", index=False)

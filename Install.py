@@ -6,6 +6,8 @@ import sys
 import subprocess
 import json
 from pathlib import Path
+import winshell
+import ctypes
 
 def print_header(text):
     print("\n" + "=" * 60)
@@ -46,7 +48,7 @@ def main():
 
     # 2. Install pip packages
     print_step("Installing Python dependencies...")
-    for pkg in ("pandas", "openpyxl", "matplotlib", "PyQt5", "email-validator", "Pillow", "firebase-admin"):
+    for pkg in ("pandas", "openpyxl", "matplotlib", "PyQt5", "email-validator", "Pillow", "firebase-admin", "winshell"):
         print(f" - {pkg}")
         subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
 
@@ -88,7 +90,7 @@ def main():
         # Create placeholder for explanation
         firebase_readme = root / "FIREBASE_SETUP.txt"
         with firebase_readme.open("w") as f:
-            f.write("""
+            f.write("""\
 FIREBASE SETUP INSTRUCTIONS
 ==========================
 
@@ -108,19 +110,20 @@ Once these steps are completed, Firebase functionality will be enabled.
     else:
         print(f"Firebase credentials file found at {firebase_creds}")
 
-    # 6. Desktop shortcut
-    print_step("Creating desktop shortcut...")
+    # 6. Create Windows Shortcut
+    print_step("Creating Windows desktop shortcut...")
     desktop = find_desktop_path()
-    shortcut = desktop / "Workplace Scheduler.bat"
+    shortcut_path = desktop / "Workplace Schedule App.lnk"
     try:
-        with shortcut.open("w") as f:
-            f.write(
-                f'@echo off\n'
-                f'cd /d "{root}"\n'
-                f'"{sys.executable}" "{root / "main.py"}"\n'
-                "pause\n"
-            )
-        print(f"Shortcut created at {shortcut}")
+        winshell.CreateShortcut(
+            Path=str(shortcut_path),
+            Target=str(sys.executable),
+            Arguments=f'"{root / "main.py"}"',
+            StartIn=str(root),
+            Icon=(str(root / "static" / "icon.ico"), 0),
+            Description="Workplace Scheduler"
+        )
+        print(f"Shortcut created at {shortcut_path}")
     except Exception as e:
         print(f"Warning: could not create shortcut: {e}")
         print(f"Run the app manually with:\n  python \"{root / 'main.py'}\"")

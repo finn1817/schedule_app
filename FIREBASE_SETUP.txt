@@ -1,4 +1,3 @@
-
 FIREBASE SETUP INSTRUCTIONS
 ==========================
 
